@@ -32,7 +32,7 @@ function Login() {
                 <Form
                     name="basic"
                     labelCol={{
-                        span: 8,
+                        span: 6,
                     }}
                     wrapperCol={{
                         span: 16,
@@ -78,14 +78,14 @@ function Login() {
                         name="remember" 
                         valuePropName="checked" 
                         wrapperCol={{
-                            offset: 8,
+                            offset: 6,
                             span: 16,
                         }}
                     >
                         <Checkbox>Remember me</Checkbox>
                     </Form.Item>
 
-                    <Form.Item
+                    {/* <Form.Item
                         name="issueSystem"
                         valuePropName="checked"
                         wrapperCol={{
@@ -94,11 +94,11 @@ function Login() {
                         }}
                     >
                         <Checkbox>Certificate issue system</Checkbox>
-                    </Form.Item>
+                    </Form.Item> */}
 
                     <Form.Item
                         wrapperCol={{
-                            offset: 8,
+                            offset: 6,
                             span: 16,
                         }}
                     >
