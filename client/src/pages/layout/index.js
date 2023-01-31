@@ -1,4 +1,5 @@
 import { Layout, Menu, Popconfirm } from 'antd'
+import { Outlet, Link, useLocation } from 'react-router-dom'
 import './index.scss'
 import {
   HomeOutlined,
@@ -10,42 +11,46 @@ import {
 const { Header, Sider } = Layout
 
 const GeekLayout = () => {
-  return (
+    const { pathname } = useLocation()
+
+    return (
     <Layout>
-      <Header className="header">
+        <Header className="header">
         <div className="logo" />
         <div className="user-info">
-          <span className="user-name">user.name</span>
-          <span className="user-logout">
-            <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
-              <LogoutOutlined /> 退出
+            <span className="user-name">user.name</span>
+            <span className="user-logout">
+            <Popconfirm title="Are you sure？" okText="yes" cancelText="cancel">
+                <LogoutOutlined /> logout
             </Popconfirm>
-          </span>
+            </span>
         </div>
-      </Header>
-      <Layout>
+        </Header>
+        <Layout>
         <Sider width={200} className="site-layout-background">
-          <Menu
+            <Menu
             mode="inline"
             theme="dark"
-            defaultSelectedKeys={['1']}
+            defaultSelectedKeys={[pathname]}
             style={{ height: '100%', borderRight: 0 }}
-          >
-            <Menu.Item icon={<HomeOutlined />} key="1">
-              数据概览
+            >
+            <Menu.Item icon={<HomeOutlined />} key="/">
+                <Link to="/">Home</Link>
             </Menu.Item>
             <Menu.Item icon={<DiffOutlined />} key="2">
-              内容管理
+                Test
             </Menu.Item>
-            <Menu.Item icon={<EditOutlined />} key="3">
-              发布文章
+            <Menu.Item icon={<EditOutlined />} key="/assignCert">
+                <Link to="/assignCert">Assign Certificate</Link>
             </Menu.Item>
-          </Menu>
+            </Menu>
         </Sider>
-        <Layout className="layout-content" style={{ padding: 20 }}>内容</Layout>
-      </Layout>
+        <Layout className="layout-content" style={{ padding: 20 }}>
+            <Outlet /> 
+        </Layout>
+        </Layout>
     </Layout>
-  )
+    )
 }
 
 export default GeekLayout
