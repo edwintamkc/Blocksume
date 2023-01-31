@@ -9,12 +9,10 @@ function Login() {
     const navigate = useNavigate()
 
     const onFinish = async(values) => {
-        console.log('Success:', values);
-        // get token from it heima's api by loginStore (mobx)
+        // get token
         try {
             await loginStore.getToken({
-                mobile: values.username,
-                code: values.password
+                username: values.username,
             })
 
             // navigate to home page
@@ -44,8 +42,8 @@ function Login() {
                     }}
                     initialValues={{
                         remember: true,
-                        username: "13111111111",
-                        password: "246810"
+                        username: "test",
+                        password: "test"
                     }}
                     onFinish={onFinish}
                     autoComplete="off"
