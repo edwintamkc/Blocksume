@@ -9,17 +9,24 @@ function Login() {
     const navigate = useNavigate()
 
     const onFinish = async(values) => {
-        // get token
         try {
-            await loginStore.getToken({
+            const res = await loginStore.login({
                 username: values.username,
+                password: values.password
             })
 
-            // navigate to home page
-            navigate('/')
+            // login success
+            if(res === true){
+                // navigate to home page
+                navigate('/')
+                // show login success msg
+                message.success('login success')
 
-            // show login success msg
-        message.success('login success')
+            } else if(res === false) {
+                message.error('incorrect username or password')
+            }
+
+            
         } catch (e) {
             message.error('incorrect username or password')
         }
@@ -42,8 +49,8 @@ function Login() {
                     }}
                     initialValues={{
                         remember: true,
-                        username: "test",
-                        password: "test"
+                        username: "test1",
+                        password: "test1"
                     }}
                     onFinish={onFinish}
                     autoComplete="off"

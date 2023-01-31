@@ -12,36 +12,32 @@ class LoginStore {
     }
 
     // mobile = username, code = password
-    getToken = async ({ username}) => {
+    login = async ({ username, password }) => {
         try{
-            const res = await http.post('http://localhost:3001/api/getToken', {
-            username: username,
+            const res = await http.post('http://localhost:3001/api/login', {
+                username: username,
+                password: password
             })
             
-            // save token to current object
-            this.token = res.data.token
-            // save to local storage
-            setToken(res.data.token)
+            const data = res.data
+            // 1 means error, 0 means ok
+            if(data.status === 1){
+                return false
+            } else if(data.status === 0){
+                
+                // save token to current object
+                this.token = res.data.token
+                // save to local storage
+                setToken(res.data.token)
+
+                return true
+            }
         } catch (e) {
             console.log(e)
+            return false
         }
         
     }
-
-    // isValidToken = async () => {
-    //     try {
-    //         const res = await http.get('http://localhost:3001/isValidToken', {})
-    //         const data = res.data
-    
-    //         if(data.status === 401){
-    //             return false
-    //         } else if(data.status === 200){
-    //             return true
-    //         }
-    //     } catch (e) {
-    //         console.log(e)
-    //     }
-    // }
 }
 
 export default LoginStore

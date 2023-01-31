@@ -39,7 +39,7 @@ const register = (req, res) => {
 
 const login = (req, res) => {
     const userInfo = req.body
-
+    console.log(userInfo)
     if(!userInfo.username || !userInfo.password){
         return res.cc(process.env.INVALID_USERNAME_OR_PASSWORD)
     }
