@@ -2,6 +2,7 @@ import express from 'express'
 import jwt from 'jsonwebtoken'
 import { expressjwt } from 'express-jwt'
 import dotenv from 'dotenv'
+import userRouter from './router/user.js'
 
 const app = express();
 dotenv.config()
@@ -20,24 +21,26 @@ app.use((req, res, next) => {
 })
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(expressjwt({secret: process.env.JWT_SECRET_KEY, algorithms: ['HS256']}).unless({ path: [/^\/api\//]}))
-app.use((err, req, res, next) => {
-  if(err.name === 'UnauthorizedError'){
-    return res.send({
-      status: 401,
-      message: process.env.TOKEN_EXPIRED
+
+
+// middleware
+// encapsulate a function for writing status and message in the res (result) object
+app.use((req, res, next) => {
+  // status = 1 means error exist, status = 0 means no error
+  res.cc = (err, status = 1) => {
+    res.send({
+      status,
+      message: err instanceof Error ? err.message : err
     })
   }
-
-  res.send({
-    status: 500,
-    message: process.env.UNKNOWN_ERROR
-  })
+  next()
 })
 
-app.get('/', (req, res) => {
-    res.send('server is ready')
-})
+// token handler
+app.use(expressjwt({secret: process.env.JWT_SECRET_KEY, algorithms: ['HS256']}).unless({ path: [/^\/api\//]}))
+
+// add user router
+app.use('/api', userRouter) 
 
 app.post('/api/getToken', (req, res) => {
     const userInfo = req.body
@@ -47,19 +50,18 @@ app.post('/api/getToken', (req, res) => {
     res.send({token:tokenStr})
 })
 
-// app.get('/isValidToken', (req, res) => {
-//   res.send({
-//     status: 200,
-//     message: process.env.SUCCESS
-//   })
-// })
 
+// middleware
+// error middleware
+app.use((err, req, res, next) => {
+  // token expire
+  if(err.name === 'UnauthorizedError'){
+    return res.cc(process.env.TOKEN_EXPIRED)
+  }
 
-
-
-
-
-
+  // unknown error
+  res.cc(err)
+})
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
