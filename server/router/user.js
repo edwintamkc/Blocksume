@@ -5,10 +5,10 @@ const router = express.Router()
 
 
 // register
-router.post('/register', userHandler.register)
+router.post('/api/register', userHandler.register)
 
 // login
-router.post('/login', userHandler.login)
+router.post('/api/login', userHandler.login)
 
 // get user info
 router.get('/getUserInfo', userHandler.getUserInfo)

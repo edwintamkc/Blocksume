@@ -8,7 +8,7 @@ class UserStore {
     }
     async getUserInfo() {
 
-        const res = await http.get('/api/getUserInfo', {
+        const res = await http.get('/getUserInfo', {
             params: {
                 username: getUsername()
             }

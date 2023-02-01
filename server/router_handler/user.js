@@ -61,7 +61,7 @@ const login = (req, res) => {
         }
 
         // success, create and return token
-        const tokenStr = jwt.sign({username: userInfo.username}, process.env.JWT_SECRET_KEY, {expiresIn: '1h'})
+        const tokenStr = jwt.sign({username: userInfo.username}, process.env.JWT_SECRET_KEY, {expiresIn: '2h'})
         res.send({
             status: 0,
             message: process.env.LOGIN_SUCCESS,

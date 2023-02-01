@@ -40,23 +40,14 @@ app.use((req, res, next) => {
 app.use(expressjwt({secret: process.env.JWT_SECRET_KEY, algorithms: ['HS256']}).unless({ path: [/^\/api\//]}))
 
 // add user router
-app.use('/api', userRouter) 
-
-app.post('/api/getToken', (req, res) => {
-    const userInfo = req.body
-    console.log(userInfo)
-
-    const tokenStr = jwt.sign({username: userInfo.username}, process.env.JWT_SECRET_KEY, {expiresIn: '1h'})
-    res.send({token:tokenStr})
-})
-
+app.use(userRouter) 
 
 // middleware
 // error middleware
 app.use((err, req, res, next) => {
   // token expire
   if(err.name === 'UnauthorizedError'){
-    return res.cc(process.env.TOKEN_EXPIRED)
+    res.status(401).cc(process.env.INVALID_TOKEN_OR_TOKEN_EXPIRED)
   }
 
   // unknown error

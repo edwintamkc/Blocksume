@@ -15,15 +15,23 @@ http.interceptors.request.use(config => {
   return config
 })
 
-// // Response interceptors
-// http.interceptors.response.use((response)=> {
-//     // 2xx 范围内的状态码都会触发该函数。
-//     // 对响应数据做点什么
-//     return response
-//   }, (error)=> {
-//     // 超出 2xx 范围的状态码都会触发该函数。
-//     // 对响应错误做点什么
-//     return Promise.reject(error)
-// })
+// Response interceptors
+http.interceptors.response.use((response)=> {
+    // range: 2xx 
+    return response
+  }, (error)=> {
+    // range: > 2xx
+    //console.dir(error)
+
+    // invalid token or token expire
+    
+    if(error.response.status ===  401){
+      // navigate to login
+      console.log('login!')
+      window.location.href = '/login'
+    }
+
+    return Promise.reject(error)
+})
 
 export { http }
