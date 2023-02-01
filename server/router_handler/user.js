@@ -39,7 +39,7 @@ const register = (req, res) => {
 
 const login = (req, res) => {
     const userInfo = req.body
-    console.log(userInfo)
+
     if(!userInfo.username || !userInfo.password){
         return res.cc(process.env.INVALID_USERNAME_OR_PASSWORD)
     }
@@ -70,4 +70,15 @@ const login = (req, res) => {
     })
 }
 
-export default {register, login}
+const getUserInfo = (req, res) => {
+    const userInfo = req.query
+    
+    // TODO: should query database and send all user data here
+    // but for now, only send username
+    res.send({
+        username: userInfo.username
+    })
+ 
+}
+
+export default {register, login, getUserInfo}

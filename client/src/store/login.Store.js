@@ -1,6 +1,6 @@
 // login module
 import { makeAutoObservable } from 'mobx'
-import { http, setToken, getToken } from '@/utils'
+import { http, setToken, getToken, removeToken, setUsername, removeUsername } from '@/utils'
 
 class LoginStore {
     // get token from local storage
@@ -14,7 +14,7 @@ class LoginStore {
     // mobile = username, code = password
     login = async ({ username, password }) => {
         try{
-            const res = await http.post('http://localhost:3001/api/login', {
+            const res = await http.post('/api/login', {
                 username: username,
                 password: password
             })
@@ -29,6 +29,7 @@ class LoginStore {
                 this.token = res.data.token
                 // save to local storage
                 setToken(res.data.token)
+                setUsername(username)
 
                 return true
             }
@@ -37,6 +38,12 @@ class LoginStore {
             return false
         }
         
+    }
+
+    logout = () => {
+        this.token = ''
+        removeToken()
+        removeUsername()
     }
 }
 

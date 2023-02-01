@@ -1,5 +1,5 @@
 import { Layout, Menu, Popconfirm } from 'antd'
-import { Outlet, Link, useLocation } from 'react-router-dom'
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import './index.scss'
 import {
   HomeOutlined,
@@ -7,20 +7,39 @@ import {
   EditOutlined,
   LogoutOutlined
 } from '@ant-design/icons'
+import { useStore } from '@/store'
+import { useEffect } from 'react'
+import { observer } from 'mobx-react-lite'
 
 const { Header, Sider } = Layout
 
 const GeekLayout = () => {
+    const navigate = useNavigate()
     const { pathname } = useLocation()
+    const { userStore, loginStore } = useStore()
+
+    // get username when first enter this page
+    useEffect(() => {
+        userStore.getUserInfo()
+    }, [userStore]) 
+
+    // logout
+    const confirmLogout = () => {
+        loginStore.logout()
+        navigate('/login')
+    }
 
     return (
     <Layout>
         <Header className="header">
         <div className="logo" />
         <div className="user-info">
-            <span className="user-name">user.name</span>
+            <span className="user-name">{ userStore.userInfo.username }</span>
             <span className="user-logout">
-            <Popconfirm title="Are you sure？" okText="yes" cancelText="cancel">
+            <Popconfirm title="Are you sure？" 
+                okText="yes" cancelText="cancel"
+                onConfirm={confirmLogout}
+            >
                 <LogoutOutlined /> logout
             </Popconfirm>
             </span>
@@ -53,4 +72,4 @@ const GeekLayout = () => {
     )
 }
 
-export default GeekLayout
+export default observer(GeekLayout)

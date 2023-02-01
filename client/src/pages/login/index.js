@@ -5,7 +5,7 @@ import { useStore } from '@/store'
 import { useNavigate } from 'react-router-dom'
 
 function Login() {
-    const { loginStore } = useStore()
+    const { loginStore, userStore } = useStore()
     const navigate = useNavigate()
 
     const onFinish = async(values) => {
