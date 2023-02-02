@@ -1,21 +1,17 @@
 import {
-  Card,
-  Breadcrumb,
-  Form,
-  Button,
-  Radio,
-  Input,
-  Upload,
-  Space,
-  Select
+  Card, Breadcrumb, Form, Button, Radio, Input,
+  Upload, Space, Select, DatePicker
 } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { Link } from 'react-router-dom'
 import './index.scss'
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
+import { useState } from 'react'
 
-const { Option } = Select
+const { RangePicker } = DatePicker;
 
 const AssignCert = () => {
+
   return (
     <div className="publish">
       <Card
@@ -31,51 +27,98 @@ const AssignCert = () => {
           initialValues={{ type: 1 }}
         >
           <Form.Item
-            label="标题"
-            name="title"
-            rules={[{ required: true, message: '请输入文章标题' }]}
+            label="Certificate name"
+            name="certificateName"
+            rules={[{ required: true, message: "Please input certificate name" }]}
           >
-            <Input placeholder="请输入文章标题" style={{ width: 400 }} />
-          </Form.Item>
-          <Form.Item
-            label="频道"
-            name="channel_id"
-            rules={[{ required: true, message: '请选择文章频道' }]}
-          >
-            <Select placeholder="请选择文章频道" style={{ width: 400 }}>
-              <Option value={0}>推荐</Option>
-            </Select>
+            <Input placeholder="Please input certificate name" style={{ width: 400 }} />
           </Form.Item>
 
-          <Form.Item label="封面">
-            <Form.Item name="type">
-              <Radio.Group>
-                <Radio value={1}>单图</Radio>
-                <Radio value={3}>三图</Radio>
-                <Radio value={0}>无图</Radio>
-              </Radio.Group>
-            </Form.Item>
+          <Form.Item
+            label="Recipient name"
+            name="recipientName"
+            rules={[{ required: true, message: "Please input recipient name" }]}
+          >
+            <Input placeholder="Please input recipient full name" style={{ width: 400 }} />
+          </Form.Item>
+
+          <Form.Item
+            label="Issue organization"
+            name="issueOrganization"
+            rules={[{ required: true, message: "Please input issue organization" }]}
+          >
+            <Input placeholder="Please input issue organization" style={{ width: 400 }} />
+          </Form.Item>
+          
+          <Form.Item
+            label="Issuer Ethereum address"
+            name="issuerEthereumAddress"
+            rules={[{ required: true, message: "Please input issuer Ethereum Address" }]}
+          >
+            <Input placeholder="Please input issuer Ethereum Address" style={{ width: 400 }} />
+          </Form.Item>
+
+          <Form.Item
+            label="Recipient Ethereum address"
+            name="recipientEthereumAddress"
+            rules={[{ required: true, message: "Please input recipient Ethereum Address" }]}
+          >
+            <Input placeholder="Please input recipient Ethereum Address" style={{ width: 400 }} />
+          </Form.Item>
+
+          <Form.Item
+            label="Duration"
+            name="duration"
+            rules={[{ required: true}]}
+          >
+            <Space>
+            <RangePicker />
+            </Space>
+          </Form.Item>
+
+          <Form.Item
+            label="Issue date"
+            name="issueDate"
+            rules={[{ required: true}]}
+          >
+            <Space>
+              <DatePicker />
+            </Space>
+          </Form.Item>
+
+          <Form.Item
+            label="Certificate ID"
+            name="certificateId"
+            rules={[{ required: true, message: "Please input certificate ID" }]}
+          >
+            <Input placeholder="Please input certificate ID" style={{ width: 400 }} />
+          </Form.Item>
+
+          <Form.Item label="Certificate image">
             <Upload
-              name="image"
+              name="certificateImage"
               listType="picture-card"
               className="avatar-uploader"
               showUploadList
+              maxCount = {1}
             >
               <div style={{ marginTop: 8 }}>
                 <PlusOutlined />
               </div>
             </Upload>
           </Form.Item>
+
           <Form.Item
-            label="内容"
-            name="content"
-            rules={[{ required: true, message: '请输入文章内容' }]}
-          ></Form.Item>
+            label="Description"
+            name="description"
+          >
+              <ReactQuill className="assignCert-quill" theme="snow" />
+          </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 4 }}>
             <Space>
               <Button size="large" type="primary" htmlType="submit">
-                发布文章
+                Assign
               </Button>
             </Space>
           </Form.Item>
