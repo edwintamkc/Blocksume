@@ -1,5 +1,4 @@
 import express from 'express'
-import jwt from 'jsonwebtoken'
 import { expressjwt } from 'express-jwt'
 import dotenv from 'dotenv'
 import userRouter from './router/user.js'

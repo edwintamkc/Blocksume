@@ -6,8 +6,6 @@ import { AuthComponent } from '@/components/authComponent'
 import Home from '@/pages/home'
 import AssignCert from '@/pages/assignCert'
 
-
-
 function App() {
   return (
     <BrowserRouter>
