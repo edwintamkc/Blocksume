@@ -16,12 +16,11 @@ class UserStore {
         }).then((res) => {
             let data = res.data
 
-            console.log(data)
-
             this.userInfo.username = data.username
             this.userInfo.userId = data.userId
             this.userInfo.profileId = data.profileId
             this.userInfo.userIdentifier = data.userIdentifier
+            
         }).catch((e) => {
             console.log(e)
         })

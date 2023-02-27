@@ -12,19 +12,23 @@ const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
 const AssignCert = () => {
-  const { certificateStore } = useStore()
+  const { certificateStore, userStore } = useStore()
 
   const onFinish = (fieldsValue) => {
     // format the date first, otherwise it is an object
     const issueDate = fieldsValue['issueDate'].format('YYYY-MM-DD')
     const durationStartDay = fieldsValue['duration'][0].format('YYYY-MM-DD')
     const durationEndDay = fieldsValue['duration'][1].format('YYYY-MM-DD')
+    const senderId = userStore.userInfo.userId + ''
+    const receiverId = fieldsValue['recipientBlocksumeId']
 
     const values = {
       ...fieldsValue,
       issueDate,
       durationStartDay,
-      durationEndDay
+      durationEndDay,
+      senderId,
+      receiverId
     }
     
     certificateStore.assignCert(values)
