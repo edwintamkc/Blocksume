@@ -60,12 +60,15 @@ const login = (req, res) => {
             return res.cc(process.env.INCORRECT_PASSWORD)
         }
 
-        // success, create and return token
+        // success
+        // return user id and token
         const tokenStr = jwt.sign({username: userInfo.username}, process.env.JWT_SECRET_KEY, {expiresIn: '2h'})
         res.send({
             status: 0,
             message: process.env.LOGIN_SUCCESS,
-            token: 'Bearer ' + tokenStr
+
+            token: 'Bearer ' + tokenStr,
+            userId: results[0].user_id
         })
     })
 }
@@ -73,12 +76,29 @@ const login = (req, res) => {
 const getUserInfo = (req, res) => {
     const userInfo = req.query
     
-    // TODO: should query database and send all user data here
-    // but for now, only send username
-    res.send({
-        username: userInfo.username
+    let sqlStr = 'select * from all_users where username=?'
+    db.query(sqlStr, userInfo.username, (err, results) => {
+        // error exist
+        if(err){
+            return res.cc(err)
+        }
+        if(results.length !== 1){
+            return res.cc(process.env.LOGIN_FAIL)
+        }
+
+        // no error
+        // return user info
+        res.send({
+            status: 0,
+            message: process.env.SUCCESS,
+
+            username: results[0].username,
+            userId: results[0].user_id,
+            profileId: results[0].profile_id,
+            userIdentifier: results[0].user_identifier
+        })
     })
- 
+
 }
 
 export default {register, login, getUserInfo}

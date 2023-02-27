@@ -2,6 +2,7 @@ import express from 'express'
 import { expressjwt } from 'express-jwt'
 import dotenv from 'dotenv'
 import userRouter from './router/user.js'
+import certificateRouter from './router/certificate.js'
 
 const app = express();
 dotenv.config()
@@ -40,6 +41,8 @@ app.use(expressjwt({secret: process.env.JWT_SECRET_KEY, algorithms: ['HS256']}).
 
 // add user router
 app.use(userRouter) 
+// add certificate router
+app.use(certificateRouter)
 
 // middleware
 // error middleware

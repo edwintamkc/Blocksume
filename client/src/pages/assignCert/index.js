@@ -4,13 +4,31 @@ import {
 } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import './index.scss'
-import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { useState } from 'react'
+import { useStore } from '@/store'
 
 const { RangePicker } = DatePicker;
+const { TextArea } = Input;
 
 const AssignCert = () => {
+  const { certificateStore } = useStore()
+
+  const onFinish = (fieldsValue) => {
+    // format the date first, otherwise it is an object
+    const issueDate = fieldsValue['issueDate'].format('YYYY-MM-DD')
+    const durationStartDay = fieldsValue['duration'][0].format('YYYY-MM-DD')
+    const durationEndDay = fieldsValue['duration'][1].format('YYYY-MM-DD')
+
+    const values = {
+      ...fieldsValue,
+      issueDate,
+      durationStartDay,
+      durationEndDay
+    }
+    
+    certificateStore.assignCert(values)
+  }
 
   return (
     <div className="publish">
@@ -25,6 +43,7 @@ const AssignCert = () => {
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
           initialValues={{ type: 1 }}
+          onFinish={onFinish}
         >
           <Form.Item
             label="Certificate name"
@@ -40,6 +59,14 @@ const AssignCert = () => {
             rules={[{ required: true, message: "Please input recipient name" }]}
           >
             <Input placeholder="Please input recipient full name" style={{ width: 400 }} />
+          </Form.Item>
+
+          <Form.Item
+            label="Recipient blocksume id"
+            name="recipientBlocksumeId"
+            rules={[{ required: true, message: "Please input recipient blocksume id" }]}
+          >
+            <Input placeholder="Please input recipient blocksume id" style={{ width: 400 }} />
           </Form.Item>
 
           <Form.Item
@@ -69,21 +96,17 @@ const AssignCert = () => {
           <Form.Item
             label="Duration"
             name="duration"
-            rules={[{ required: true}]}
+            rules={[{ required: true, message: "Please select duration", type: "array" }]}
           >
-            <Space>
             <RangePicker />
-            </Space>
           </Form.Item>
 
           <Form.Item
             label="Issue date"
             name="issueDate"
-            rules={[{ required: true}]}
+            rules={[{ required: true, message: "Please select issue date" }]}
           >
-            <Space>
               <DatePicker />
-            </Space>
           </Form.Item>
 
           <Form.Item
@@ -112,7 +135,14 @@ const AssignCert = () => {
             label="Description"
             name="description"
           >
-              <ReactQuill className="assignCert-quill" theme="snow" />
+            <TextArea
+              placeholder="Please input description (optional)"
+              autoSize={{
+                minRows: 4,
+                maxRows: 10,
+              }}
+              style={{width: 600}}
+            />
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 4 }}>
