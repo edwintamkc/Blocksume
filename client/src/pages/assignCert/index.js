@@ -5,22 +5,33 @@ import {
 import { PlusOutlined } from '@ant-design/icons'
 import './index.scss'
 import 'react-quill/dist/quill.snow.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useStore } from '@/store'
+import { observer } from 'mobx-react-lite'
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
 const AssignCert = () => {
+  //const form = Form.useForm()
   const { certificateStore, userStore } = useStore()
+
+  // // set init values for some input fields when first enter this page
+  // useEffect(() => {
+  //   form.setFieldsValue({
+  //     issueOrganization: userStore.userInfo.companyName
+  //   })
+  // }, []) 
 
   const onFinish = (fieldsValue) => {
     // format the date first, otherwise it is an object
     const issueDate = fieldsValue['issueDate'].format('YYYY-MM-DD')
     const durationStartDay = fieldsValue['duration'][0].format('YYYY-MM-DD')
     const durationEndDay = fieldsValue['duration'][1].format('YYYY-MM-DD')
-    const senderId = userStore.userInfo.userId + ''
     const receiverId = fieldsValue['recipientBlocksumeId']
+    const senderId = userStore.userInfo.userId + ''
+    const issueOrganizationId = userStore.userInfo.companyId
+    const issueOrganizationName = userStore.userInfo.companyName
 
     const values = {
       ...fieldsValue,
@@ -28,11 +39,21 @@ const AssignCert = () => {
       durationStartDay,
       durationEndDay,
       senderId,
-      receiverId
+      receiverId,
+      issueOrganizationId,
+      issueOrganizationName
     }
     
     certificateStore.assignCert(values)
   }
+
+  const [form] = Form.useForm()
+
+  useEffect(() => {
+    form.setFieldsValue({
+      'issueOrganization': userStore.userInfo.companyName,
+    })
+  }, [userStore])
 
   return (
     <div className="publish">
@@ -44,9 +65,10 @@ const AssignCert = () => {
         }
       >
         <Form
+          form = { form }
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
-          initialValues={{ type: 1 }}
+          initialValues={{ type: 1, /*'issueOrganization': userStore.userInfo.companyName*/ }}
           onFinish={onFinish}
         >
           <Form.Item
@@ -78,7 +100,7 @@ const AssignCert = () => {
             name="issueOrganization"
             rules={[{ required: true, message: "Please input issue organization" }]}
           >
-            <Input placeholder="Please input issue organization" style={{ width: 400 }} />
+            <Input placeholder="Please input issue organization" style={{ width: 400, color: 'black'}} disabled />
           </Form.Item>
           
           <Form.Item
@@ -162,4 +184,4 @@ const AssignCert = () => {
   )
 }
 
-export default AssignCert
+export default observer(AssignCert)

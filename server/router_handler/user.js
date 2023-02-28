@@ -76,7 +76,7 @@ const login = (req, res) => {
 const getUserInfo = (req, res) => {
     const userInfo = req.query
     
-    let sqlStr = 'select * from all_users where username=?'
+    let sqlStr = 'select * from all_users a, profile_issuer p, company c where a.username = ? and p.company_id = c.company_id'
     db.query(sqlStr, userInfo.username, (err, results) => {
         // error exist
         if(err){
@@ -88,14 +88,21 @@ const getUserInfo = (req, res) => {
 
         // no error
         // return user info
+        console.log(results[0])
         res.send({
             status: 0,
             message: process.env.SUCCESS,
 
-            username: results[0].username,
             userId: results[0].user_id,
+            username: results[0].username,
             profileId: results[0].profile_id,
-            userIdentifier: results[0].user_identifier
+            userIdentifier: results[0].user_identifier,
+            companyId: results[0].company_id,
+            companyName: results[0].company_name,
+            companyAddress: results[0].company_address,
+            position: results[0].position,
+            email: results[0].email,
+            ethAddress: results[0].ethereum_address,
         })
     })
 
