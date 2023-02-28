@@ -16,12 +16,13 @@ const UserInfo = () => {
     const { userStore } = useStore()
 
     return (
-        <Row>
+        <Row style={{height: '100%'}}>
             <Col span={24}>
                 <Card title={
                         <Breadcrumb separator='>'>
                             <Breadcrumb.Item>User information</Breadcrumb.Item>
                         </Breadcrumb>}
+                        style={{height: '100%'}}
                     >
                     <img className="userIcon" src={avatar} alt='' />
                     <div className='userName'>{userStore.userInfo.username}</div>
