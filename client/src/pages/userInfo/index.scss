@@ -1,0 +1,25 @@
+.userIcon {
+    width: 200px;
+    height: 200px;
+    display: block;
+    margin: 0 auto 20px;
+}
+
+.userName {
+    margin-bottom: 4px;
+    color: black;
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 28px;
+    text-align: center;
+}
+
+.userDetail {
+    margin-top: 40px;
+    font-size: 20px;
+}
+
+.userDetail > * {
+    font-size: 20px;
+    margin-bottom: 6px;
+}

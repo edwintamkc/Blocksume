@@ -1,25 +1,58 @@
 import { observer } from 'mobx-react-lite'
-import { Col, Divider, Row, Card, Avatar } from 'antd'
+import { Col, Divider, Row, Card, Avatar, Breadcrumb } from 'antd'
+import avatar from '@/assets/avatar.png'
+import './index.scss'
+import { useStore } from '@/store'
+import {
+    UserOutlined,
+    ContactsOutlined,
+    SolutionOutlined,
+    HomeOutlined,
+    MailOutlined,
+    EnvironmentOutlined
+  } from '@ant-design/icons'
 
 const UserInfo = () => {
+    const { userStore } = useStore()
+
     return (
         <Row>
             <Col span={24}>
-                <Card bordered={false} style={{ marginBottom: 24 }}>
+                <Card title={
+                        <Breadcrumb separator='>'>
+                            <Breadcrumb.Item>User information</Breadcrumb.Item>
+                        </Breadcrumb>}
+                    >
+                    <img className="userIcon" src={avatar} alt='' />
+                    <div className='userName'>{userStore.userInfo.username}</div>
                     
-                    <div>
-                        <div>
-                        <img alt="" />
-                        <div>username</div>
-                        {/* <div>{currentUser.name}</div> */}
-                        <div>signature</div>
-                        {/* <div>{currentUser?.signature}</div> */}
-                        </div>
-                        {/* {renderUserInfo(currentUser)} */}
-                        <Divider dashed />
-                        {/* <TagList tags={currentUser.tags || []} /> */}
-                        <Divider style={{ marginTop: 16 }} dashed />
-                    </div>
+                    <Row className='userDetail'>
+                        <Col span={6} offset={6}>
+                            <UserOutlined /> User id: {userStore.userInfo.userId}
+                        </Col>
+                        <Col span={6} offset={4}>
+                            <ContactsOutlined /> User type: {userStore.userInfo.userIdentifier == 1 ? 'Certificate issuer' : 'Certificate receiver'}
+                        </Col>
+
+                        {/* only display the following detail when it is certificate issuer */}
+                        { (userStore.userInfo.userIdentifier == 1 ? true : false) && 
+                            <>
+                                <Col span={6} offset={6}>
+                                    <HomeOutlined /> Company: {userStore.userInfo.companyName}
+                                </Col>
+                                <Col span={6} offset={4}>
+                                    <SolutionOutlined /> Role: {userStore.userInfo.position}
+                                </Col>
+                            </>
+                        }
+
+                        <Col span={6} offset={6}>
+                            <MailOutlined /> Email: {userStore.userInfo.email}
+                        </Col>
+                        <Col span={6} offset={4}>
+                            <EnvironmentOutlined /> Ethereum address: {userStore.userInfo.ethAddress}
+                        </Col>
+                    </Row>
                     
                 </Card>
             </Col>
