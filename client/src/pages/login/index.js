@@ -35,7 +35,7 @@ function Login() {
     return (
         <div className="login">
             <Card className="login-container">
-                <img className="login-logo" src={logo} alt="" />
+                <img className="blocksume-logo" src={logo} alt="" />
                 <Form
                     name="basic"
                     labelCol={{
