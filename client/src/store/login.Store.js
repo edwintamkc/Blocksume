@@ -21,9 +21,9 @@ class LoginStore {
             
             const data = res.data
             // 1 means error, 0 means ok
-            if(data.status === 1){
-                return false
-            } else if(data.status === 0){
+            if(data.status === false){
+                return data
+            } else if(data.status === true){
                 
                 // save token to current object
                 this.token = res.data.token
@@ -31,7 +31,7 @@ class LoginStore {
                 setToken(res.data.token)
                 setUsername(username)
 
-                return true
+                return data
             }
         } catch (e) {
             console.log(e)

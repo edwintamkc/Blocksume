@@ -5,7 +5,7 @@ import { useStore } from '@/store'
 import { useNavigate } from 'react-router-dom'
 
 function Login() {
-    const { loginStore, userStore } = useStore()
+    const { loginStore } = useStore()
     const navigate = useNavigate()
 
     const onFinish = async(values) => {
@@ -14,16 +14,16 @@ function Login() {
                 username: values.username,
                 password: values.password
             })
-
+            console.log(res)
             // login success
-            if(res === true){
+            if(res.status === true){
                 // navigate to home page
                 navigate('/')
                 // show login success msg
-                message.success('login success')
+                message.success(res.message)
 
-            } else if(res === false) {
-                message.error('incorrect username or password')
+            } else if(res.status === false) {
+                message.error(res.message)
             }
 
             
@@ -92,17 +92,6 @@ function Login() {
                         <Checkbox>Remember me</Checkbox>
                     </Form.Item>
 
-                    {/* <Form.Item
-                        name="issueSystem"
-                        valuePropName="checked"
-                        wrapperCol={{
-                            offset: 8,
-                            span: 16,
-                        }}
-                    >
-                        <Checkbox>Certificate issue system</Checkbox>
-                    </Form.Item> */}
-
                     <Form.Item
                         wrapperCol={{
                             offset: 6,
@@ -110,7 +99,7 @@ function Login() {
                         }}
                     >
                         <Button type="primary" htmlType="submit">
-                            Submit
+                            login
                         </Button>
                     </Form.Item>
                 </Form>

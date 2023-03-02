@@ -18,13 +18,21 @@ http.interceptors.request.use(config => {
 // Response interceptors
 http.interceptors.response.use((response)=> {
     // range: 2xx 
+
+    // server : status = 1 means false, status = 0 means true
+    // client side modify the reply in interceptor
+    if(response.data.status === 1){
+      response.data.status = false
+    } else if(response.data.status === 0){
+      response.data.status = true
+    }
+
     return response
   }, (error)=> {
     // range: > 2xx
     //console.dir(error)
 
     // invalid token or token expire
-    
     if(error.response.status ===  401){
       // navigate to login
       console.log('login!')

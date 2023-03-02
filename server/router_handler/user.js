@@ -1,4 +1,4 @@
-import db from '../db/index.js'
+import db from '../config/database.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
@@ -51,7 +51,7 @@ const login = (req, res) => {
             return res.cc(err)
         }
         if(results.length !== 1){
-            return res.cc(process.env.LOGIN_FAIL)
+            return res.cc(process.env.INCORRECT_USERNAME)
         }
         
         // compare encrypted password
@@ -62,7 +62,7 @@ const login = (req, res) => {
 
         // success
         // return user id and token
-        const tokenStr = jwt.sign({username: userInfo.username}, process.env.JWT_SECRET_KEY, {expiresIn: '2h'})
+        const tokenStr = jwt.sign({username: userInfo.username}, process.env.JWT_SECRET_KEY, {expiresIn: '24h'})
         res.send({
             status: 0,
             message: process.env.LOGIN_SUCCESS,
@@ -88,7 +88,6 @@ const getUserInfo = (req, res) => {
 
         // no error
         // return user info
-        console.log(results[0])
         res.send({
             status: 0,
             message: process.env.SUCCESS,
@@ -97,7 +96,7 @@ const getUserInfo = (req, res) => {
             username: results[0].username,
             profileId: results[0].profile_id,
             userIdentifier: results[0].user_identifier,
-            companyId: results[0].company_id,
+            companyId: results[0].company_id.toString(),
             companyName: results[0].company_name,
             companyAddress: results[0].company_address,
             position: results[0].position,

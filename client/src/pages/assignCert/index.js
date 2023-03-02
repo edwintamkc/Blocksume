@@ -1,6 +1,6 @@
 import {
-  Card, Breadcrumb, Form, Button, Radio, Input,
-  Upload, Space, Select, DatePicker
+  Card, Breadcrumb, Form, Button, Input,
+  Upload, DatePicker, message, Popconfirm
 } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import './index.scss'
@@ -13,17 +13,9 @@ const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
 const AssignCert = () => {
-  //const form = Form.useForm()
   const { certificateStore, userStore } = useStore()
 
-  // // set init values for some input fields when first enter this page
-  // useEffect(() => {
-  //   form.setFieldsValue({
-  //     issueOrganization: userStore.userInfo.companyName
-  //   })
-  // }, []) 
-
-  const onFinish = (fieldsValue) => {
+  const onFinish = async (fieldsValue) => {
     // format the date first, otherwise it is an object
     const issueDate = fieldsValue['issueDate'].format('YYYY-MM-DD')
     const durationStartDay = fieldsValue['duration'][0].format('YYYY-MM-DD')
@@ -44,7 +36,15 @@ const AssignCert = () => {
       issueOrganizationName
     }
     
-    certificateStore.assignCert(values)
+    // assign cert
+    const res = await certificateStore.assignCert(values)
+
+    // display message
+    if(res.status === true){
+      message.success(res.message)
+    } else {
+      message.error(res.message)
+    }
   }
 
   const [form] = Form.useForm()
@@ -54,6 +54,8 @@ const AssignCert = () => {
       'issueOrganization': userStore.userInfo.companyName,
     })
   }, [userStore])
+
+
 
   return (
     <div className="publish">
@@ -68,7 +70,7 @@ const AssignCert = () => {
           form = { form }
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
-          initialValues={{ type: 1, /*'issueOrganization': userStore.userInfo.companyName*/ }}
+          initialValues={{ type: 1 }}
           onFinish={onFinish}
         >
           <Form.Item
@@ -171,12 +173,10 @@ const AssignCert = () => {
             />
           </Form.Item>
 
-          <Form.Item wrapperCol={{ offset: 4 }}>
-            <Space>
+          <Form.Item wrapperCol={{ offset: 4 }}>  
               <Button size="large" type="primary" htmlType="submit">
                 Assign
               </Button>
-            </Space>
           </Form.Item>
         </Form>
       </Card>

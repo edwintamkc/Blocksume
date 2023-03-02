@@ -11,6 +11,9 @@ class CertificateStore {
             const res = await http.post('/assignCertificate', {
                 values
             })
+
+            return res.data
+
         } catch (e) {
             console.log(e)
         }
