@@ -7,6 +7,7 @@ import { AuthComponent } from '@/components/authComponent'
 import Home from '@/pages/home'
 import AssignCert from '@/pages/assignCert'
 import UserInfo from '@/pages/userInfo'
+import SystemSelect from '@/pages/register/systemSelect'
 
 function App() {
   return (
@@ -23,7 +24,8 @@ function App() {
               <Route path='/assignCert' element={<AssignCert />}></Route>
             </Route>
             <Route path='/login' element={<Login />}></Route>
-            <Route path='/register' element={<Register />}></Route>
+            <Route path='/register/issuer' element={<Register />}></Route>
+            <Route path='/register/system-select' element={<SystemSelect />}></Route>
           </Routes>
         </div>
     </BrowserRouter>

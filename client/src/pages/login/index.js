@@ -1,4 +1,4 @@
-import { Card, Form, Input, Button, Checkbox, message, Col } from 'antd'
+import { Card, Form, Input, Button, Checkbox, message } from 'antd'
 import logo from '@/assets/logo.png'
 import './index.scss'
 import { useStore } from '@/store'
@@ -102,7 +102,7 @@ function Login() {
                             login
                         </Button>
 
-                        Or <a href="/register">register now!</a>
+                        Or <a href="/register/system-select">register now!</a>
 
                     </Form.Item>
                 </Form>
