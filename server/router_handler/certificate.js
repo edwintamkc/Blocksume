@@ -1,7 +1,7 @@
 import db from '../config/database.js'
 import moment from 'moment'
 
-const assignCert = async(req, res) => {
+const assignCert = async (req, res) => {
     const values = req.body.values
     let currentTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
 
@@ -31,7 +31,7 @@ const assignCert = async(req, res) => {
     //     return res.cc(process.env.ASSIGN_CERT_FAIL)
     // }
 
-    
+
 
 }
 

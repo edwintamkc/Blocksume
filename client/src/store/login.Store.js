@@ -13,18 +13,18 @@ class LoginStore {
 
     // mobile = username, code = password
     login = async ({ username, password }) => {
-        try{
+        try {
             const res = await http.post('/api/login', {
                 username: username,
                 password: password
             })
-            
+
             const data = res.data
             // 1 means error, 0 means ok
-            if(data.status === false){
+            if (data.status === false) {
                 return data
-            } else if(data.status === true){
-                
+            } else if (data.status === true) {
+
                 // save token to current object
                 this.token = res.data.token
                 // save to local storage
@@ -37,7 +37,7 @@ class LoginStore {
             console.log(e)
             return false
         }
-        
+
     }
 
     logout = () => {

@@ -1,4 +1,4 @@
-import { Card, Form, Input, Button, Checkbox, message } from 'antd'
+import { Card, Form, Input, Button, Checkbox, message, Col } from 'antd'
 import logo from '@/assets/logo.png'
 import './index.scss'
 import { useStore } from '@/store'
@@ -8,7 +8,7 @@ function Login() {
     const { loginStore } = useStore()
     const navigate = useNavigate()
 
-    const onFinish = async(values) => {
+    const onFinish = async (values) => {
         try {
             const res = await loginStore.login({
                 username: values.username,
@@ -16,17 +16,17 @@ function Login() {
             })
             console.log(res)
             // login success
-            if(res.status === true){
+            if (res.status === true) {
                 // navigate to home page
                 navigate('/')
                 // show login success msg
                 message.success(res.message)
 
-            } else if(res.status === false) {
+            } else if (res.status === false) {
                 message.error(res.message)
             }
 
-            
+
         } catch (e) {
             message.error('incorrect username or password')
         }
@@ -60,8 +60,8 @@ function Login() {
                         name="username"
                         rules={[
                             {
-                            required: true,
-                            message: 'Please input your username!',
+                                required: true,
+                                message: "Please input your username!",
                             },
                         ]}
                     >
@@ -73,17 +73,17 @@ function Login() {
                         name="password"
                         rules={[
                             {
-                            required: true,
-                            message: 'Please input your password!',
+                                required: true,
+                                message: "Please input your password!",
                             },
                         ]}
                     >
                         <Input.Password />
                     </Form.Item>
 
-                    <Form.Item 
-                        name="remember" 
-                        valuePropName="checked" 
+                    <Form.Item
+                        name="remember"
+                        valuePropName="checked"
                         wrapperCol={{
                             offset: 6,
                             span: 16,
@@ -98,9 +98,12 @@ function Login() {
                             span: 16,
                         }}
                     >
-                        <Button type="primary" htmlType="submit">
+                        <Button type="primary" htmlType="submit" style={{ marginRight: '20px' }}>
                             login
                         </Button>
+
+                        Or <a href="/register">register now!</a>
+
                     </Form.Item>
                 </Form>
             </Card>

@@ -1,6 +1,7 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import Login from '@/pages/login'
 import Layout from '@/pages/layout'
+import Register from '@/pages/register'
 import '@/App.css'
 import { AuthComponent } from '@/components/authComponent'
 import Home from '@/pages/home'
@@ -22,6 +23,7 @@ function App() {
               <Route path='/assignCert' element={<AssignCert />}></Route>
             </Route>
             <Route path='/login' element={<Login />}></Route>
+            <Route path='/register' element={<Register />}></Route>
           </Routes>
         </div>
     </BrowserRouter>

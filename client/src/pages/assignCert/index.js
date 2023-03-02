@@ -35,12 +35,12 @@ const AssignCert = () => {
       issueOrganizationId,
       issueOrganizationName
     }
-    
+
     // assign cert
     const res = await certificateStore.assignCert(values)
 
     // display message
-    if(res.status === true){
+    if (res.status === true) {
       message.success(res.message)
     } else {
       message.error(res.message)
@@ -67,7 +67,7 @@ const AssignCert = () => {
         }
       >
         <Form
-          form = { form }
+          form={form}
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
           initialValues={{ type: 1 }}
@@ -102,9 +102,9 @@ const AssignCert = () => {
             name="issueOrganization"
             rules={[{ required: true, message: "Please input issue organization" }]}
           >
-            <Input placeholder="Please input issue organization" style={{ width: 400, color: 'black'}} disabled />
+            <Input placeholder="Please input issue organization" style={{ width: 400, color: 'black' }} disabled />
           </Form.Item>
-          
+
           <Form.Item
             label="Issuer Ethereum address"
             name="issuerEthereumAddress"
@@ -134,7 +134,7 @@ const AssignCert = () => {
             name="issueDate"
             rules={[{ required: true, message: "Please select issue date" }]}
           >
-              <DatePicker />
+            <DatePicker />
           </Form.Item>
 
           <Form.Item
@@ -151,7 +151,7 @@ const AssignCert = () => {
               listType="picture-card"
               className="avatar-uploader"
               showUploadList
-              maxCount = {1}
+              maxCount={1}
             >
               <div style={{ marginTop: 8 }}>
                 <PlusOutlined />
@@ -169,14 +169,14 @@ const AssignCert = () => {
                 minRows: 4,
                 maxRows: 10,
               }}
-              style={{width: 600}}
+              style={{ width: 600 }}
             />
           </Form.Item>
 
-          <Form.Item wrapperCol={{ offset: 4 }}>  
-              <Button size="large" type="primary" htmlType="submit">
-                Assign
-              </Button>
+          <Form.Item wrapperCol={{ offset: 4 }}>
+            <Button size="large" type="primary" htmlType="submit">
+              Assign
+            </Button>
           </Form.Item>
         </Form>
       </Card>

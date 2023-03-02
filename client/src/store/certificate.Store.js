@@ -6,7 +6,7 @@ class CertificateStore {
         makeAutoObservable(this)
     }
 
-    assignCert = async(values) => {
+    assignCert = async (values) => {
         try {
             const res = await http.post('/assignCertificate', {
                 values

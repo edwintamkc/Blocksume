@@ -2,10 +2,10 @@ import { Layout, Menu, Popconfirm } from 'antd'
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import './index.scss'
 import {
-  HomeOutlined,
-  EditOutlined,
-  LogoutOutlined,
-  UserOutlined
+    HomeOutlined,
+    EditOutlined,
+    LogoutOutlined,
+    UserOutlined
 } from '@ant-design/icons'
 import { useStore } from '@/store'
 import { useEffect } from 'react'
@@ -21,7 +21,7 @@ const GeekLayout = () => {
     // get username when first enter this page
     useEffect(() => {
         userStore.getUserInfo()
-    }, [userStore]) 
+    }, [userStore])
 
     // logout
     const confirmLogout = () => {
@@ -30,45 +30,45 @@ const GeekLayout = () => {
     }
 
     return (
-    <Layout>
-        <Header className="header">
-        <div className="logo" />
-        <div className="user-info">
-            <span className="user-name">{ userStore.userInfo.username }</span>
-            <span className="user-logout">
-            <Popconfirm title="Are you sure？" 
-                okText="yes" cancelText="cancel"
-                onConfirm={confirmLogout}
-            >
-                <LogoutOutlined /> logout
-            </Popconfirm>
-            </span>
-        </div>
-        </Header>
         <Layout>
-        <Sider width={200} className="site-layout-background">
-            <Menu
-            mode="inline"
-            theme="dark"
-            defaultSelectedKeys={[pathname]}
-            style={{ height: '100%', borderRight: 0 }}
-            >
-            <Menu.Item icon={<HomeOutlined />} key="/">
-                <Link to="/">Home</Link>
-            </Menu.Item>
-            <Menu.Item icon={<UserOutlined />} key="userInfo">
-                <Link to="/userInfo">User information</Link>
-            </Menu.Item>
-            <Menu.Item icon={<EditOutlined />} key="/assignCert">
-                <Link to="/assignCert">Assign certificate</Link>
-            </Menu.Item>
-            </Menu>
-        </Sider>
-        <Layout className="layout-content" style={{ padding: 20 }}>
-            <Outlet /> 
+            <Header className="header">
+                <div className="logo" />
+                <div className="user-info">
+                    <span className="user-name">{userStore.userInfo.username}</span>
+                    <span className="user-logout">
+                        <Popconfirm title="Are you sure？"
+                            okText="yes" cancelText="cancel"
+                            onConfirm={confirmLogout}
+                        >
+                            <LogoutOutlined /> logout
+                        </Popconfirm>
+                    </span>
+                </div>
+            </Header>
+            <Layout>
+                <Sider width={200} className="site-layout-background">
+                    <Menu
+                        mode="inline"
+                        theme="dark"
+                        defaultSelectedKeys={[pathname]}
+                        style={{ height: '100%', borderRight: 0 }}
+                    >
+                        <Menu.Item icon={<HomeOutlined />} key="/">
+                            <Link to="/">Home</Link>
+                        </Menu.Item>
+                        <Menu.Item icon={<UserOutlined />} key="userInfo">
+                            <Link to="/userInfo">User information</Link>
+                        </Menu.Item>
+                        <Menu.Item icon={<EditOutlined />} key="/assignCert">
+                            <Link to="/assignCert">Assign certificate</Link>
+                        </Menu.Item>
+                    </Menu>
+                </Sider>
+                <Layout className="layout-content" style={{ padding: 20 }}>
+                    <Outlet />
+                </Layout>
+            </Layout>
         </Layout>
-        </Layout>
-    </Layout>
     )
 }
 

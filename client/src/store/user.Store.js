@@ -6,7 +6,7 @@ class UserStore {
     constructor() {
         makeAutoObservable(this)
     }
-    
+
     getUserInfo = async () => {
 
         const res = await http.get('/getUserInfo', {
