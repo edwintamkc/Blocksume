@@ -16,7 +16,7 @@ const ManageCert = () => {
     useEffect(() => {
         let userId = userStore.userInfo.userId
         certificateStore.getCertificateList(userId)
-    }, [certificateStore])
+    })
 
     return (
         <Row style={{ height: '100%' }}>
@@ -33,6 +33,9 @@ const ManageCert = () => {
                             <Col span={6}>
                                 <Card title={cert.certificate_name} bordered={false}>
                                     <p>Cert id: {cert.certificate_ref_id}</p>
+                                    <p>Assigned by: {cert.issue_organization_name}</p>
+                                    <p>Assign date: {cert.issue_date}</p>
+                                    <p>Description: {cert.description}</p>
                                 </Card>
                             </Col>
                         ))}
