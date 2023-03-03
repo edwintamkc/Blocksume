@@ -6,6 +6,7 @@ import '@/App.css'
 import { AuthComponent } from '@/components/authComponent'
 import Home from '@/pages/home/home'
 import AssignCert from '@/pages/cert/assignCert'
+import ManageCert from './pages/cert/manageCert'
 import UserInfo from '@/pages/user/userInfo'
 import SystemSelect from '@/pages/register/systemSelect'
 
@@ -23,6 +24,7 @@ function App() {
               <Route index element={<Home />}></Route>
               <Route path='/user/info' element={<UserInfo />}></Route>
               <Route path='/cert/assign' element={<AssignCert />}></Route>
+              <Route path='/cert/manage' element={<ManageCert />}></Route>
 
             </Route>
             

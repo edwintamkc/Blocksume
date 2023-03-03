@@ -5,7 +5,8 @@ import {
     HomeOutlined,
     EditOutlined,
     LogoutOutlined,
-    UserOutlined
+    UserOutlined,
+    BookOutlined
 } from '@ant-design/icons'
 import { useStore } from '@/store'
 import { useEffect } from 'react'
@@ -68,6 +69,17 @@ const GeekLayout = () => {
                             &&
                             <Menu.Item icon={<EditOutlined />} key="/cert/assign">
                                 <Link to="/cert/assign">Assign certificate</Link>
+                            </Menu.Item>
+
+                        }
+
+                        {/* only display the following detail when it is certificate receiver
+                            note that 1 = issuer, 2 = receiver */}
+                        {
+                            (userStore.userInfo.userIdentifier == 2 ? true : false)
+                            &&
+                            <Menu.Item icon={<BookOutlined />} key="/cert/manage">
+                                <Link to="/cert/manage">Manage certificate</Link>
                             </Menu.Item>
 
                         }

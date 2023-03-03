@@ -1,11 +1,11 @@
 import {
   Card, Breadcrumb, Form, Button, Input,
-  Upload, DatePicker, message, Popconfirm
+  Upload, DatePicker, message
 } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import './index.scss'
 import 'react-quill/dist/quill.snow.css'
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useStore } from '@/store'
 import { observer } from 'mobx-react-lite'
 
