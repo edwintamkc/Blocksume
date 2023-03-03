@@ -3,10 +3,21 @@ import {
     Row,
     Col,
     Card,
-    Breadcrumb
+    Breadcrumb,
+    Button
 } from 'antd'
+import { useEffect } from 'react'
+import { useStore } from '@/store'
 
 const ManageCert = () => {
+    const { certificateStore, userStore } = useStore()
+
+    // get cert list
+    useEffect(() => {
+        let userId = userStore.userInfo.userId
+        certificateStore.getCertificateList(userId)
+    }, [certificateStore])
+
     return (
         <Row style={{ height: '100%' }}>
             <Col span={24}>
@@ -17,34 +28,14 @@ const ManageCert = () => {
                     style={{ height: '100%' }}
                 >
 
-                    <Row className='certDetail'>
-                        <Col span={6}>
-                            <Card title="Card title" bordered={false}>
-                                <p>Card content</p>
-                                <p>Card content2</p>
-                            </Card>
-                        </Col>
-                        <Col span={6}>
-                            <Card title="Card title" bordered={false}>
-                                Card content
-                            </Card>
-                        </Col>
-                        <Col span={6}>
-                            <Card title="Card title" bordered={false}>
-                                <p>Card content</p>
-                                <p>Card content2</p>
-                            </Card>
-                        </Col>
-                        <Col span={6}>
-                            <Card title="Card title" bordered={false}>
-                                Card content
-                            </Card>
-                        </Col>
-                        <Col span={6}>
-                            <Card title="Card title" bordered={false}>
-                                Card content
-                            </Card>
-                        </Col>
+                    <Row className='certificateList'>
+                        {certificateStore.certificateList.map(cert => (
+                            <Col span={6}>
+                                <Card title={cert.certificate_name} bordered={false}>
+                                    <p>{cert.certificate_id}</p>
+                                </Card>
+                            </Col>
+                        ))}
                     </Row>
 
                 </Card>

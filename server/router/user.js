@@ -11,6 +11,6 @@ router.post('/api/register', userHandler.register)
 router.post('/api/login', userHandler.login)
 
 // get user info
-router.get('/getUserInfo', userHandler.getUserInfo)
+router.get('/user/info', userHandler.getUserInfo)
 
 export default router

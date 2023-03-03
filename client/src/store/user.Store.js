@@ -9,7 +9,7 @@ class UserStore {
 
     getUserInfo = async () => {
 
-        const res = await http.get('/getUserInfo', {
+        await http.get('/user/info', {
             params: {
                 username: getUsername()
             }
@@ -30,7 +30,6 @@ class UserStore {
         }).catch((e) => {
             console.log(e)
         })
-
     }
 }
 

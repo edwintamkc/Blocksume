@@ -77,7 +77,6 @@ const getUserInfo = async (req, res) => {
     const userInfo = req.query
 
     let isIssuer = await checkIsIssuer(userInfo.username)
-    console.log('isIssuer is: ' + isIssuer)
 
     if(isIssuer){
         getCertificateIssuerInfo(userInfo.username, req, res)

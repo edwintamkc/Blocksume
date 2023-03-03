@@ -14,7 +14,7 @@ function Login() {
                 username: values.username,
                 password: values.password
             })
-            console.log(res)
+            
             // login success
             if (res.status === true) {
                 // navigate to home page

@@ -27,7 +27,7 @@ const UserInfo = () => {
                     <img className="userIcon" src={avatar} alt='' />
                     <div className='userName'>{userStore.userInfo.username}</div>
                     
-                    <Row className='userDetail'>
+                    <Row className='userInfo'>
                         <Col span={6} offset={6}>
                             <UserOutlined /> User id: {userStore.userInfo.userId}
                         </Col>
