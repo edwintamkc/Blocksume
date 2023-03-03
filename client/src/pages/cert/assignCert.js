@@ -16,24 +16,23 @@ const AssignCert = () => {
   const { certificateStore, userStore } = useStore()
 
   const onFinish = async (fieldsValue) => {
-    // format the date first, otherwise it is an object
-    const issueDate = fieldsValue['issueDate'].format('YYYY-MM-DD')
-    const durationStartDay = fieldsValue['duration'][0].format('YYYY-MM-DD')
-    const durationEndDay = fieldsValue['duration'][1].format('YYYY-MM-DD')
-    const receiverId = fieldsValue['recipientBlocksumeId']
-    const senderId = userStore.userInfo.userId + ''
-    const issueOrganizationId = userStore.userInfo.companyId
-    const issueOrganizationName = userStore.userInfo.companyName
 
     const values = {
-      ...fieldsValue,
-      issueDate,
-      durationStartDay,
-      durationEndDay,
-      senderId,
-      receiverId,
-      issueOrganizationId,
-      issueOrganizationName
+      certificateRefId: fieldsValue.certificateId,
+      certificateName: fieldsValue.certificateName,
+      recipientName: fieldsValue.recipientName,
+      issueOrganization: fieldsValue.issueOrganization,
+      issuerEthereumAddress: fieldsValue.issuerEthereumAddress,
+      recipientEthereumAddress: fieldsValue.recipientEthereumAddress,
+      durationStartDay: fieldsValue['duration'][0].format('YYYY-MM-DD'),
+      durationEndDay: fieldsValue['duration'][1].format('YYYY-MM-DD'),
+      issueDate: fieldsValue['issueDate'].format('YYYY-MM-DD'),
+      description: fieldsValue.description,
+      
+      senderId: userStore.userInfo.userId + '',
+      receiverId: fieldsValue['recipientBlocksumeId'],
+      issueOrganizationId: userStore.userInfo.companyId,
+      issueOrganizationName: userStore.userInfo.companyName,
     }
 
     // assign cert
@@ -73,6 +72,14 @@ const AssignCert = () => {
           initialValues={{ type: 1 }}
           onFinish={onFinish}
         >
+          <Form.Item
+            label="Certificate ID"
+            name="certificateId"
+            rules={[{ required: true, message: "Please input certificate ID" }]}
+          >
+            <Input placeholder="Please input certificate ID" style={{ width: 400 }} />
+          </Form.Item>
+
           <Form.Item
             label="Certificate name"
             name="certificateName"
@@ -135,14 +142,6 @@ const AssignCert = () => {
             rules={[{ required: true, message: "Please select issue date" }]}
           >
             <DatePicker />
-          </Form.Item>
-
-          <Form.Item
-            label="Certificate ID"
-            name="certificateId"
-            rules={[{ required: true, message: "Please input certificate ID" }]}
-          >
-            <Input placeholder="Please input certificate ID" style={{ width: 400 }} />
           </Form.Item>
 
           <Form.Item label="Certificate image">
