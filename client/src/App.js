@@ -4,7 +4,7 @@ import Layout from '@/pages/layout'
 import Register from '@/pages/register'
 import '@/App.css'
 import { AuthComponent } from '@/components/authComponent'
-import Home from '@/pages/home'
+import Home from '@/pages/home/index'
 import AssignCert from '@/pages/assignCert'
 import UserInfo from '@/pages/userInfo'
 import SystemSelect from '@/pages/register/systemSelect'
@@ -17,12 +17,15 @@ function App() {
             <Route path='/' element={
               <AuthComponent>
                 <Layout />
-              </AuthComponent>}>
+              </AuthComponent>}
+            >
               
               <Route index element={<Home />}></Route>
-              <Route path='/userInfo' element={<UserInfo />}></Route>
-              <Route path='/assignCert' element={<AssignCert />}></Route>
+              <Route path='/user/info' element={<UserInfo />}></Route>
+              <Route path='/cert/assign' element={<AssignCert />}></Route>
+              
             </Route>
+            
             <Route path='/login' element={<Login />}></Route>
             <Route path='/register/issuer' element={<Register />}></Route>
             <Route path='/register/system-select' element={<SystemSelect />}></Route>

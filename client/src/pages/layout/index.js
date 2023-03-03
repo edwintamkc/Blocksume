@@ -56,11 +56,11 @@ const GeekLayout = () => {
                         <Menu.Item icon={<HomeOutlined />} key="/">
                             <Link to="/">Home</Link>
                         </Menu.Item>
-                        <Menu.Item icon={<UserOutlined />} key="userInfo">
-                            <Link to="/userInfo">User information</Link>
+                        <Menu.Item icon={<UserOutlined />} key="/user/info">
+                            <Link to="/user/info">User information</Link>
                         </Menu.Item>
-                        <Menu.Item icon={<EditOutlined />} key="/assignCert">
-                            <Link to="/assignCert">Assign certificate</Link>
+                        <Menu.Item icon={<EditOutlined />} key="/cert/assign">
+                            <Link to="/cert/assign">Assign certificate</Link>
                         </Menu.Item>
                     </Menu>
                 </Sider>
