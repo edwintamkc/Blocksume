@@ -43,7 +43,7 @@ const createTransaction = (certId, senderId, receiverId, currentTime) => {
 const getCertificateList = async (req, res) => {
     const userId = req.query.userId
 
-    let sql = `select c.certificate_id, c.certificate_name, c.issue_organization_name, c.duration_start_date, c.duration_end_date, c.description,
+    let sql = `select c.certificate_id, c.certificate_ref_id, c.certificate_name, c.issue_organization_name, c.duration_start_date, c.duration_end_date, c.description,
     c.receiver_name, DATE_FORMAT(t.creation_date, '%Y-%d-%m') as issue_date, c.image_address
     from transaction t, certificate c where t.receiver_id = ${userId} and t.certificate_id = c.certificate_id`
 

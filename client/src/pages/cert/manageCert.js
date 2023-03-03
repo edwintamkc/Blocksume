@@ -32,7 +32,7 @@ const ManageCert = () => {
                         {certificateStore.certificateList.map(cert => (
                             <Col span={6}>
                                 <Card title={cert.certificate_name} bordered={false}>
-                                    <p>{cert.certificate_id}</p>
+                                    <p>Cert id: {cert.certificate_ref_id}</p>
                                 </Card>
                             </Col>
                         ))}
