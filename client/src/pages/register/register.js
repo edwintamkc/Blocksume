@@ -12,7 +12,7 @@ import {
     Card
 } from 'antd';
 import { useState } from 'react'
-import './index.scss'
+import './register.scss'
 import logo from '@/assets/logo.png'
 
 

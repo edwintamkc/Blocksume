@@ -1,6 +1,6 @@
 import { Layout, Menu, Popconfirm } from 'antd'
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
-import './index.scss'
+import './layout.scss'
 import {
     HomeOutlined,
     EditOutlined,

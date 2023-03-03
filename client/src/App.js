@@ -1,12 +1,12 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import Login from '@/pages/login'
-import Layout from '@/pages/layout'
-import Register from '@/pages/register'
+import Login from '@/pages/login/login'
+import Layout from '@/pages/layout/layout'
+import Register from '@/pages/register/register'
 import '@/App.css'
 import { AuthComponent } from '@/components/authComponent'
-import Home from '@/pages/home/index'
-import AssignCert from '@/pages/assignCert'
-import UserInfo from '@/pages/userInfo'
+import Home from '@/pages/home/home'
+import AssignCert from '@/pages/cert/assignCert'
+import UserInfo from '@/pages/user/userInfo'
 import SystemSelect from '@/pages/register/systemSelect'
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
               <Route index element={<Home />}></Route>
               <Route path='/user/info' element={<UserInfo />}></Route>
               <Route path='/cert/assign' element={<AssignCert />}></Route>
-              
+
             </Route>
             
             <Route path='/login' element={<Login />}></Route>

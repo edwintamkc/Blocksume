@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite'
-import { Col, Divider, Row, Card, Avatar, Breadcrumb } from 'antd'
+import { Col, Row, Card, Breadcrumb } from 'antd'
 import avatar from '@/assets/avatar.png'
-import './index.scss'
+import './userInfo.scss'
 import { useStore } from '@/store'
 import {
     UserOutlined,
