@@ -29,26 +29,11 @@ class CertificateStore {
             }
         }).then((res) => {
 
-            console.log('raw data is:')
-            console.log(res.data.certificateList)
-
             this.certificateList = res.data.certificateList
-
-            console.log('cert list is:')
-            console.log(this.certificateList)
-
 
         }).catch((e) => {
             console.log(e)
         })
-
-        // console.log('result is:')
-        // console.log(result.data.data)
-
-        // this.certificateList = result.data.data
-
-        // console.log('list is:')
-        // console.log(this.certificateList)
     }
 }
 
