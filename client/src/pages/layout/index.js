@@ -56,12 +56,22 @@ const GeekLayout = () => {
                         <Menu.Item icon={<HomeOutlined />} key="/">
                             <Link to="/">Home</Link>
                         </Menu.Item>
+
                         <Menu.Item icon={<UserOutlined />} key="/user/info">
                             <Link to="/user/info">User information</Link>
                         </Menu.Item>
-                        <Menu.Item icon={<EditOutlined />} key="/cert/assign">
-                            <Link to="/cert/assign">Assign certificate</Link>
-                        </Menu.Item>
+
+                        {/* only display the following detail when it is certificate issuer
+                            note that 1 = issuer, 2 = receiver */}
+                        {
+                            (userStore.userInfo.userIdentifier == 1 ? true : false)
+                            &&
+                            <Menu.Item icon={<EditOutlined />} key="/cert/assign">
+                                <Link to="/cert/assign">Assign certificate</Link>
+                            </Menu.Item>
+
+                        }
+
                     </Menu>
                 </Sider>
                 <Layout className="layout-content" style={{ padding: 20 }}>

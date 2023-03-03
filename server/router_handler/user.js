@@ -73,17 +73,42 @@ const login = (req, res) => {
     })
 }
 
-const getUserInfo = (req, res) => {
+const getUserInfo = async (req, res) => {
     const userInfo = req.query
 
+    let isIssuer = await checkIsIssuer(userInfo.username)
+    console.log('isIssuer is: ' + isIssuer)
+
+    if(isIssuer){
+        getCertificateIssuerInfo(userInfo.username, req, res)
+    } else {
+        getCertificateReceiverInfo(userInfo.username, req, res)
+    }
+
+}
+
+const checkIsIssuer = async (username) => {
+    let sqlStr = `select user_identifier from all_users where username = "${username}"`
+
+    let result = null
+    await db.query(sqlStr).then( data => {
+        // database setting: user_identifier = 1 means certificate issuer, user_identifier = 2 means certificate receiver
+        result = data[0].user_identifier === 1 ? true : false
+    })
+
+    return result
+}
+
+const getCertificateIssuerInfo = (username, req, res) => {
     let sqlStr = 'select * from all_users a, profile_issuer p, company c where a.username = ? and p.company_id = c.company_id'
-    db.query(sqlStr, userInfo.username, (err, results) => {
+
+    db.query(sqlStr, username, (err, results) => {
         // error exist
         if (err) {
             return res.cc(err)
         }
         if (results.length !== 1) {
-            return res.cc(process.env.LOGIN_FAIL)
+            return res.cc(process.env.CANNOT_RETRIEVE_USER_INFO)
         }
 
         // no error
@@ -104,7 +129,34 @@ const getUserInfo = (req, res) => {
             ethAddress: results[0].ethereum_address,
         })
     })
+}
 
+const getCertificateReceiverInfo = (username, req, res) => {
+    let sqlStr = 'select * from all_users a, profile_receiver p where a.username = ? and a.user_id = p.user_id'
+    
+    db.query(sqlStr, username, (err, results) => {
+        // error exist
+        if (err) {
+            return res.cc(err)
+        }
+        if (results.length !== 1) {
+            return res.cc(process.env.CANNOT_RETRIEVE_USER_INFO)
+        }
+
+        // no error
+        // return user info
+        res.send({
+            status: 0,
+            message: process.env.SUCCESS,
+
+            userId: results[0].user_id,
+            username: results[0].username,
+            profileId: results[0].profile_id,
+            userIdentifier: results[0].user_identifier,
+            email: results[0].email,
+            ethAddress: results[0].ethereum_address,
+        })
+    })
 }
 
 export default { register, login, getUserInfo }

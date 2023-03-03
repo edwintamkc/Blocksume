@@ -35,7 +35,8 @@ const UserInfo = () => {
                             <ContactsOutlined /> User type: {userStore.userInfo.userIdentifier == 1 ? 'Certificate issuer' : 'Certificate receiver'}
                         </Col>
 
-                        {/* only display the following detail when it is certificate issuer */}
+                        {/* only display the following detail when it is certificate issuer
+                            note that 1 = issuer, 2 = receiver */}
                         { (userStore.userInfo.userIdentifier == 1 ? true : false) && 
                             <>
                                 <Col span={6} offset={6}>
