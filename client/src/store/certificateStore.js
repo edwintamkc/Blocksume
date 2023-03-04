@@ -3,6 +3,7 @@ import { http } from '@/utils'
 
 class CertificateStore {
     certificateList = []
+    receiverBlockchainAddress = ''
 
     constructor() {
         makeAutoObservable(this)
@@ -30,6 +31,21 @@ class CertificateStore {
         }).then((res) => {
 
             this.certificateList = res.data.certificateList
+
+        }).catch((e) => {
+            console.log(e)
+        })
+    }
+
+    getBlockchainAddressByUserId = async (userId) => {
+
+        const result = await http.get('/certificate/getBlockchainAddressByUserId', {
+            params: {
+                userId
+            }
+        }).then((res) => {
+
+            this.receiverBlockchainAddress = res.data.blockchainAddress
 
         }).catch((e) => {
             console.log(e)

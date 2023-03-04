@@ -4,19 +4,41 @@ import {
     Col,
     Card,
     Breadcrumb,
+    Checkbox,
     Button
 } from 'antd'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useStore } from '@/store'
 
 const ManageCert = () => {
-    const { certificateStore, userStore } = useStore()
+    const { certificateStore, userStore, resumeStore } = useStore()
+    const [ selectedCertList, setSelectedCertList ] = useState([])
 
     // get cert list
     useEffect(() => {
         let userId = userStore.userInfo.userId
         certificateStore.getCertificateList(userId)
     }, [certificateStore])
+
+    const checkboxOnChange = (e, certificateId) => {
+        // add cert id into selectedCertList if checked
+        // delete it from selectedCertList if unchecked
+        if(e.target.checked){
+            setSelectedCertList([
+                ...selectedCertList,
+                certificateId
+            ])
+            
+        } else {
+            setSelectedCertList(
+                selectedCertList.filter(id => id != certificateId)
+            )
+        }
+    }
+
+    const genResume = () => {
+        resumeStore.generateDigitalResume(userStore.userInfo.userId, selectedCertList)
+    }
 
     return (
         <Row style={{ height: '100%' }}>
@@ -31,14 +53,20 @@ const ManageCert = () => {
                     <Row className='certificateList'>
                         {certificateStore.certificateList.map(cert => (
                             <Col span={6}>
-                                <Card title={cert.certificate_name} bordered={false}>
+                                <Card title={cert.certificate_name} bordered={false} actions={[<Checkbox onChange={e => checkboxOnChange(e, cert.certificate_id)}></Checkbox>]}>
                                     <p>Cert id: {cert.certificate_ref_id}</p>
                                     <p>Assigned by: {cert.issue_organization_name}</p>
+                                    <p>Assign to: {cert.receiver_name}</p>
                                     <p>Assign date: {cert.issue_date}</p>
                                     <p>Description: {cert.description}</p>
                                 </Card>
                             </Col>
                         ))}
+                    </Row>
+                    <Row>
+                        <Col span={4} push={20}>
+                            <Button type='primary' onClick={genResume}>Generate digital resume</Button>
+                        </Col>
                     </Row>
 
                 </Card>

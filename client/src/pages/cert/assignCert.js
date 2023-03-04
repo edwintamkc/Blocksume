@@ -5,7 +5,7 @@ import {
 import { PlusOutlined } from '@ant-design/icons'
 import './assignCert.scss'
 import 'react-quill/dist/quill.snow.css'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useStore } from '@/store'
 import { observer } from 'mobx-react-lite'
 
@@ -14,6 +14,8 @@ const { TextArea } = Input;
 
 const AssignCert = () => {
   const { certificateStore, userStore } = useStore()
+  const [form] = Form.useForm()
+  const [ recipientId, setRecipientId ] = useState(-1)
 
   const onFinish = async (fieldsValue) => {
 
@@ -46,13 +48,31 @@ const AssignCert = () => {
     }
   }
 
-  const [form] = Form.useForm()
-
   useEffect(() => {
     form.setFieldsValue({
       'issueOrganization': userStore.userInfo.companyName,
+      'issuerEthereumAddress': userStore.userInfo.ethAddress
     })
   }, [userStore])
+
+  const updateRecipientBlocksumeId = (e) => {
+    setRecipientId(e.target.value)
+  }
+
+  const getReceiverBlockchainAddress = async () => {
+    // if pass validation
+    // get recipient blockchain address from server and set it to form
+    if(recipientId != '' && recipientId != -1){
+
+      await certificateStore.getBlockchainAddressByUserId(recipientId + '')
+
+      form.setFieldsValue({
+        'recipientEthereumAddress': certificateStore.receiverBlockchainAddress
+      })
+    }
+  }
+
+
 
 
 
@@ -101,7 +121,8 @@ const AssignCert = () => {
             name="recipientBlocksumeId"
             rules={[{ required: true, message: "Please input recipient blocksume id" }]}
           >
-            <Input placeholder="Please input recipient blocksume id" style={{ width: 400 }} />
+            <Input placeholder="Please input recipient blocksume id" style={{ width: 400 }} onChange={updateRecipientBlocksumeId}/>
+            <Button onClick={getReceiverBlockchainAddress}>Get receiver blockchain address</Button>
           </Form.Item>
 
           <Form.Item
@@ -117,7 +138,7 @@ const AssignCert = () => {
             name="issuerEthereumAddress"
             rules={[{ required: true, message: "Please input issuer Ethereum Address" }]}
           >
-            <Input placeholder="Please input issuer Ethereum Address" style={{ width: 400 }} />
+            <Input placeholder="Please input issuer Ethereum Address" style={{ width: 400, color: 'black' }} disabled/>
           </Form.Item>
 
           <Form.Item
@@ -125,7 +146,7 @@ const AssignCert = () => {
             name="recipientEthereumAddress"
             rules={[{ required: true, message: "Please input recipient Ethereum Address" }]}
           >
-            <Input placeholder="Please input recipient Ethereum Address" style={{ width: 400 }} />
+            <Input placeholder="Please click get receiver blockchain address button" style={{ width: 400, color: 'black' }} disabled/>
           </Form.Item>
 
           <Form.Item

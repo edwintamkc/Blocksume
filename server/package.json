@@ -17,8 +17,11 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-jwt": "^8.4.0",
+    "fs-extra": "^11.1.0",
+    "handlebars": "^4.7.7",
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.4",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "puppeteer": "^19.7.2"
   }
 }

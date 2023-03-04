@@ -1,0 +1,65 @@
+<style type="text/css">
+    body {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-weight: 200;
+    }
+    table {
+        width: 100%;
+    }
+    table tr td {
+        border: 1px solid black;
+        padding: 8px;
+    }
+</style>
+<html>
+    <body>
+        <h1>Vaccine History</h1>
+        <p>{{id.name.first}} {{id.name.last}}</p>
+        <p>{{id.animal}} {{id.color}} {{id.breed}}</p>
+{{!-- {
+            "id": {
+                "name": {
+                    "first": "Layla",
+                    "last": "Clark"
+                },
+                "animal": "Dog",
+                "color": "Yellow",
+                "breed": "Carolina Dog"
+            },
+            "shots": [
+                {
+                    "type": "Heartworm",
+                    "date": "2015-02-02"
+                },
+                {
+                    "type": "test2",
+                    "date": "20512131233-02-02"
+                },
+                {
+                    "type": "test3",
+                    "date": "201123-02-02"
+                }
+            ]
+        } --}}
+        <table>
+            <tr>
+                <th>
+                    Type
+                </th>
+                <th>
+                    Date
+                </th>
+            </tr>
+            {{#each shots as |shot|}}
+            <tr>
+                <td>
+                    {{shot.type}}
+                </td>
+                <td>
+                    {{shot.date}}
+                </td>
+            </tr>
+            {{/each}}
+        </table>
+    </body>
+</html>

@@ -7,6 +7,9 @@ const router = express.Router()
 router.post('/certificate/assign', certificateHandler.assignCert)
 
 // get certificate list by userId
-router.get('/certificate', certificateHandler.getCertificateList)
+router.get('/certificate', certificateHandler.getCertificateList) 
+
+// get getBlockchain address by userId
+router.get('/certificate/getBlockchainAddressByUserId', certificateHandler.getBlockchainAddressByUserId)
 
 export default router
