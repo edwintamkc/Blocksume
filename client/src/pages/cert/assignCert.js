@@ -3,7 +3,7 @@ import {
   Upload, DatePicker, message
 } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import './index.scss'
+import './assignCert.scss'
 import 'react-quill/dist/quill.snow.css'
 import { useEffect } from 'react'
 import { useStore } from '@/store'

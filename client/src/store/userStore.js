@@ -1,10 +1,18 @@
 import { makeAutoObservable } from "mobx"
 import { http, getUsername } from '@/utils'
+import { makePersistable } from "mobx-persist-store"
 
 class UserStore {
     userInfo = {}
     constructor() {
         makeAutoObservable(this)
+
+        // data persistence
+        makePersistable(this, {
+            name: 'UserStore',
+            properties: ['userInfo'],
+            storage: window.localStorage
+        })
     }
 
     getUserInfo = async () => {

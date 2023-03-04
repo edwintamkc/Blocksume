@@ -16,7 +16,7 @@ const ManageCert = () => {
     useEffect(() => {
         let userId = userStore.userInfo.userId
         certificateStore.getCertificateList(userId)
-    })
+    }, [certificateStore])
 
     return (
         <Row style={{ height: '100%' }}>
