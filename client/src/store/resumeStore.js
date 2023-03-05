@@ -6,11 +6,11 @@ class ResumeStore {
         makeAutoObservable(this)
     }
 
-    generateDigitalResume = async (userId, certificateIdList) => {
+    generateDigitalResume = async (userId, certificateList) => {
         try {
             const res = await http.post('/resume/generate', {
                 userId,
-                certificateIdList
+                certificateList
             })
 
             console.log(res)

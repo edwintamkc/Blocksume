@@ -3,63 +3,63 @@
         font-family: sans-serif;
         font-weight: 200;
     }
+
     table {
         width: 100%;
     }
+
     table tr td {
         border: 1px solid black;
         padding: 8px;
     }
+
+    h1 {
+        text-align: center;
+    }
+
+    .hori-line {
+        width: 100%;
+        height: 1px;
+        border-top: solid black;
+        margin-top: 2%;
+    }
+
+    h4 {
+        display : inline;
+    }
+
+    a {
+        margin-left: 2%;
+    }
+    
+    .certificateRefId {
+        position: absolute;
+        left: 60%;
+    }
 </style>
 <html>
-    <body>
-        <h1>Vaccine History</h1>
-        <p>{{id.name.first}} {{id.name.last}}</p>
-        <p>{{id.animal}} {{id.color}} {{id.breed}}</p>
-{{!-- {
-            "id": {
-                "name": {
-                    "first": "Layla",
-                    "last": "Clark"
-                },
-                "animal": "Dog",
-                "color": "Yellow",
-                "breed": "Carolina Dog"
-            },
-            "shots": [
-                {
-                    "type": "Heartworm",
-                    "date": "2015-02-02"
-                },
-                {
-                    "type": "test2",
-                    "date": "20512131233-02-02"
-                },
-                {
-                    "type": "test3",
-                    "date": "201123-02-02"
-                }
-            ]
-        } --}}
-        <table>
-            <tr>
-                <th>
-                    Type
-                </th>
-                <th>
-                    Date
-                </th>
-            </tr>
-            {{#each shots as |shot|}}
-            <tr>
-                <td>
-                    {{shot.type}}
-                </td>
-                <td>
-                    {{shot.date}}
-                </td>
-            </tr>
-            {{/each}}
-        </table>
-    </body>
+
+<body>
+    <div class="title">
+        <h1>{{userProfile.user_full_name}}</h1>
+        <span style="margin-right: 20%; margin-left:10%">email: {{userProfile.email}}</span>
+        <span>ethereum_address: {{userProfile.ethereum_address}}</span>
+        <div class="hori-line"></div>
+    </div>
+    <div class="detail">
+        <h2>Certificate:</h2>
+
+        {{#each certificateList as |cert|}}
+        <h4>{{cert.certificate_name}}</h4>
+        <a href="google.com">(test url)</a>
+        <span class="certificateRefId">Certificate Id: {{cert.certificate_ref_id}}</span>
+        <br />
+        <p>Issue organization: {{cert.issue_organization_name}}</p>
+        <p>Duration: {{cert.duration_start_date}} to {{cert.duration_end_date}}</p>
+        <p>Issue date: {{cert.issue_date}}</p>
+        <p>Description: {{cert.description}}</p>
+        {{/each}}
+    </div>
+</body>
+
 </html>
