@@ -3,7 +3,7 @@ import { http } from '@/utils'
 
 class CertificateStore {
     certificateList = []
-    receiverBlockchainAddress = ''
+    //receiverBlockchainAddress = ''
 
     constructor() {
         makeAutoObservable(this)
@@ -39,17 +39,18 @@ class CertificateStore {
 
     getBlockchainAddressByUserId = async (userId) => {
 
-        const result = await http.get('/certificate/getBlockchainAddressByUserId', {
-            params: {
-                userId
-            }
-        }).then((res) => {
+        try{
+            const result = await http.get('/certificate/getBlockchainAddressByUserId', {
+                params: {
+                    userId
+                }
+            })
 
-            this.receiverBlockchainAddress = res.data.blockchainAddress
+            return result.data
 
-        }).catch((e) => {
+        } catch (e) {
             console.log(e)
-        })
+        }
     }
 }
 

@@ -1,5 +1,6 @@
 import db from '../config/database.js'
 import moment from 'moment'
+import validator from '../utils/validator.js'
 
 const assignCert = async (req, res) => {
     const values = req.body.values
@@ -58,34 +59,45 @@ const getCertificateList = async (req, res) => {
 const getBlockchainAddressByUserId = async (req, res) => {
     const userId = req.query.userId
 
-    let sql = `select user_identifier from all_users where user_id = ${userId}`
-    const result = await db.query(sql).then(async data => {
-        if (data.length > 0) {
-            if (data[0].user_identifier === 1) {
-                sql = `select ethereum_address from profile_issuer where user_id = ${userId}`
-                return await db.query(sql)
-            } else if (data[0].user_identifier === 2) {
-                sql = `select ethereum_address from profile_receiver where user_id = ${userId}`
-                return await db.query(sql)
-            }
-        }
-    })
+    const isNumber = validator.validateNumber(userId)
 
-
-    if(result == undefined){
+    if ( !isNumber) {
+        // not number, return false
         res.send({
             status: 1,
-            message: process.env.SUCCESS,
-            blockchainAddress: 'Please input valid recipient blocksume id'
+            message: process.env.INVALID_BLOCKSUMU_ID,
         })
-    } else {
-        res.send({
-            status: 0,
-            message: process.env.SUCCESS,
-            blockchainAddress: result[0].ethereum_address
-        })
-    }
-}
 
+    } else {
+        let sql = `select user_identifier from all_users where user_id = ${userId}`
+        const result = await db.query(sql).then(async data => {
+            if (data.length > 0) {
+                if (data[0].user_identifier === 1) {
+                    sql = `select ethereum_address from profile_issuer where user_id = ${userId}`
+                    return await db.query(sql)
+                } else if (data[0].user_identifier === 2) {
+                    sql = `select ethereum_address from profile_receiver where user_id = ${userId}`
+                    return await db.query(sql)
+                }
+            }
+        })
+
+
+        if (result == undefined) {
+            res.send({
+                status: 1,
+                message: process.env.INVALID_BLOCKSUMU_ID,
+            })
+        } else {
+            res.send({
+                status: 0,
+                message: process.env.SUCCESS,
+                blockchainAddress: result[0].ethereum_address
+            })
+        }
+    }
+
+
+}
 
 export default { assignCert, getCertificateList, getBlockchainAddressByUserId }
