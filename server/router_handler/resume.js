@@ -4,11 +4,15 @@ import path from 'path'
 import fs from 'fs-extra'
 
 const generateDigitalResume = async (req, res) => {
+    console.log('generating resume')
+    let content = req.body
+    console.log(content)
     try {
         // const browser = await puppeteer.launch()
         // const page = await browser.newPage()
 
-        // const filePath = path.join(process.cwd(), '../lib/template/resumeTemplate.hbs')
+        // console.log(process.cwd())
+        // const filePath = path.join(process.cwd(), '/lib/template/resumeTemplate.hbs')
         // const templateHtml = await fs.readFile(filePath, 'utf-8')
 
         // const content = await hbs.compile(templateHtml)({
@@ -39,13 +43,15 @@ const generateDigitalResume = async (req, res) => {
 
         // await page.setContent(content)
         // await page.pdf({
-        //     path: path.join(process.cwd(), '../lib/output/resume.pdf'),
+        //     path: path.join(process.cwd(), '/lib/output/resume.pdf'),
         //     format: 'A4'
         // })
 
         // await browser.close()
-    } catch (e) {
 
+        // console.log('finish resume generation')
+    } catch (e) {
+        console.log(e)
     }
 }
 

@@ -20,18 +20,18 @@ const ManageCert = () => {
         certificateStore.getCertificateList(userId)
     }, [certificateStore])
 
-    const checkboxOnChange = (e, certificateId) => {
+    const checkboxOnChange = (e, cert) => {
         // add cert id into selectedCertList if checked
         // delete it from selectedCertList if unchecked
         if(e.target.checked){
             setSelectedCertList([
                 ...selectedCertList,
-                certificateId
+                cert
             ])
             
         } else {
             setSelectedCertList(
-                selectedCertList.filter(id => id != certificateId)
+                selectedCertList.filter(item => item.certificate_id != cert.certificate_id)
             )
         }
     }
@@ -53,7 +53,7 @@ const ManageCert = () => {
                     <Row className='certificateList'>
                         {certificateStore.certificateList.map(cert => (
                             <Col span={6}>
-                                <Card title={cert.certificate_name} bordered={false} actions={[<Checkbox onChange={e => checkboxOnChange(e, cert.certificate_id)}></Checkbox>]}>
+                                <Card title={cert.certificate_name} bordered={false} actions={[<Checkbox onChange={e => checkboxOnChange(e, cert)}></Checkbox>]}>
                                     <p>Cert id: {cert.certificate_ref_id}</p>
                                     <p>Assigned by: {cert.issue_organization_name}</p>
                                     <p>Assign to: {cert.receiver_name}</p>
