@@ -1,6 +1,9 @@
 import db from '../config/database.js'
 import moment from 'moment'
 import validator from '../utils/validator.js'
+import Web3 from 'web3'
+import configuration from '../truffle/build/contracts/Transaction.json' assert { type: "json" }
+import utils from '../utils/utils.js'
 
 const assignCert = async (req, res) => {
     const values = req.body.values
@@ -30,9 +33,6 @@ const assignCert = async (req, res) => {
         console.log('error exists in assignCert try-catch:\n' + error)
         return res.cc(process.env.ASSIGN_CERT_FAIL)
     }
-
-
-
 }
 
 const createTransaction = (certId, senderId, receiverId, currentTime) => {
@@ -99,5 +99,37 @@ const getBlockchainAddressByUserId = async (req, res) => {
 
 
 }
+
+// const updateBlockchain = () => {
+//     const web3 = new Web3('http://127.0.0.1:7545')
+//     const contract = new web3.eth.Contract(configuration.abi, configuration.networks['5777'].address)
+
+// }
+
+const getHashOfCert = async (certId) => {
+    let str = await getCombinedStrOfCert(certId)
+    return utils.getHashByString(str)
+}
+
+const getCombinedStrOfCert = async (certId) => {
+    let sql = `select * from certificate where certificate_id = ${certId}`
+
+    const data = await db.query(sql)
+
+    let str = data[0].certificate_id + ''
+        + data[0].certificate_ref_id
+        + data[0].certificate_name
+        + data[0].issue_organization_name
+        + data[0].receiver_name
+        + data[0].duration_start_date
+        + data[0].duration_end_date
+        + data[0].description
+        + data[0].issue_date + ''
+        + data[0].image_address + ''
+
+    return str
+}
+
+getHashOfCert(5)
 
 export default { assignCert, getCertificateList, getBlockchainAddressByUserId }
