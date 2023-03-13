@@ -1,23 +1,27 @@
 import db from '../config/database.js'
 import moment from 'moment'
 import validator from '../utils/validator.js'
-import Web3 from 'web3'
-import configuration from '../truffle/build/contracts/Transaction.json' assert { type: "json" }
 import utils from '../utils/utils.js'
+import { contract, ethAccount } from '../config/web3.js'
 
 const assignCert = async (req, res) => {
     const values = req.body.values
     let currentTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
 
-    // TODO: add blockchain address
     await db.beginTransaction()
     try {
+        let certId
         let sql = `insert into certificate (certificate_ref_id, certificate_name, issue_organization_id, issue_organization_name, receiver_name, duration_start_date, duration_end_date, creation_date, description) values ("${values.certificateRefId}", "${values.certificateName}", "${values.issueOrganizationId}", "${values.issueOrganizationName}", "${values.recipientName}", "${values.durationStartDay}", "${values.durationEndDay}", "${currentTime}", "${values.description}")`
         db.query(sql)
             .then(data => {
+                certId = data.insertId
                 return createTransaction(data.insertId, values.senderId, values.receiverId, currentTime)
             }).then(async data => {
+
                 await db.commit()
+
+                // add cert's hash to blockchain
+                await addCertToBlockchain(certId)
 
                 console.log('end transaction: createCertificate')
                 return res.cc(process.env.ASSIGN_CERT_SUCCESS, 0)
@@ -100,14 +104,16 @@ const getBlockchainAddressByUserId = async (req, res) => {
 
 }
 
-// const updateBlockchain = () => {
-//     const web3 = new Web3('http://127.0.0.1:7545')
-//     const contract = new web3.eth.Contract(configuration.abi, configuration.networks['5777'].address)
+const addCertToBlockchain = async (certId) => {
+    // get hash of a transaction
+    const hash = await getHashOfCert(certId)
 
-// }
+    // update blockchain   
+    await contract.methods.addTransaction(certId, hash).send({ from: ethAccount, gas: '1000000'})
+}
 
 const getHashOfCert = async (certId) => {
-    let str = await getCombinedStrOfCert(certId)
+    const str = await getCombinedStrOfCert(certId)
     return utils.getHashByString(str)
 }
 
@@ -116,7 +122,7 @@ const getCombinedStrOfCert = async (certId) => {
 
     const data = await db.query(sql)
 
-    let str = data[0].certificate_id + ''
+    const str = data[0].certificate_id + ''
         + data[0].certificate_ref_id
         + data[0].certificate_name
         + data[0].issue_organization_name
@@ -129,7 +135,5 @@ const getCombinedStrOfCert = async (certId) => {
 
     return str
 }
-
-getHashOfCert(5)
 
 export default { assignCert, getCertificateList, getBlockchainAddressByUserId }
