@@ -51,9 +51,14 @@ const UserInfo = () => {
                         <Col span={6} offset={6}>
                             <MailOutlined /> Email: {userStore.userInfo.email}
                         </Col>
-                        <Col span={6} offset={4}>
-                            <EnvironmentOutlined /> Ethereum address: {userStore.userInfo.ethAddress}
-                        </Col>
+
+                        {/* only display the following detail when it is certificate receiver
+                            note that 1 = issuer, 2 = receiver */}
+                        { (userStore.userInfo.userIdentifier == 2 ? true : false) && 
+                            <Col span={6} offset={4}>
+                                <SolutionOutlined /> Name: {userStore.userInfo.userFullName}
+                            </Col>
+                        }
                     </Row>
                     
                 </Card>

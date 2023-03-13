@@ -33,7 +33,7 @@ class UserStore {
             this.userInfo.companyName = data.companyName
             this.userInfo.position = data.position
             this.userInfo.email = data.email
-            this.userInfo.ethAddress = data.ethAddress
+            this.userInfo.userFullName = data.userFullName
 
         }).catch((e) => {
             console.log(e)

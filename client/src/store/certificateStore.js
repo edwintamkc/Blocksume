@@ -37,10 +37,10 @@ class CertificateStore {
         })
     }
 
-    getBlockchainAddressByUserId = async (userId) => {
+    getRecipientFullNameByUserId = async (userId) => {
 
         try{
-            const result = await http.get('/certificate/getBlockchainAddressByUserId', {
+            const result = await http.get('/certificate/getRecipientFullNameByUserId', {
                 params: {
                     userId
                 }

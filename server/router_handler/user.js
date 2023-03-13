@@ -78,9 +78,9 @@ const getUserInfo = async (req, res) => {
 
     let isIssuer = await checkIsIssuer(userInfo.username)
 
-    if(isIssuer){
+    if(isIssuer){ // cert issuer
         getCertificateIssuerInfo(userInfo.username, req, res)
-    } else {
+    } else { // cert receiver
         getCertificateReceiverInfo(userInfo.username, req, res)
     }
 
@@ -124,8 +124,7 @@ const getCertificateIssuerInfo = (username, req, res) => {
             companyName: results[0].company_name,
             companyAddress: results[0].company_address,
             position: results[0].position,
-            email: results[0].email,
-            ethAddress: results[0].ethereum_address,
+            email: results[0].email
         })
     })
 }
@@ -153,7 +152,7 @@ const getCertificateReceiverInfo = (username, req, res) => {
             profileId: results[0].profile_id,
             userIdentifier: results[0].user_identifier,
             email: results[0].email,
-            ethAddress: results[0].ethereum_address,
+            userFullName: results[0].user_full_name
         })
     })
 }

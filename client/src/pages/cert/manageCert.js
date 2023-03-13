@@ -58,6 +58,7 @@ const ManageCert = () => {
                                     <p>Assigned by: {cert.issue_organization_name}</p>
                                     <p>Assign to: {cert.receiver_name}</p>
                                     <p>Assign date: {cert.issue_date}</p>
+                                    <p>Valid until: {cert.valid_until_date}</p>
                                     <p>Description: {cert.description}</p>
                                 </Card>
                             </Col>
