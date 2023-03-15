@@ -8,11 +8,19 @@ const generateDigitalResume = async (req, res) => {
     console.log('generating resume')
     let data = req.body
 
+    // get user profile and add it to data
     let result = await getUserProfile(data.userId)
     data.userProfile = result[0]
 
+    // get verification link for each cert and add it to data
+    for(let i = 0; i < data.certificateList.length; i++){
+        let link = getVerificationLink(data.certificateList[i].certificate_id)
+        data.certificateList[i].verification_link = link
+    }    
+
     console.log(data)
 
+    // start generating resume pdf
     try {
         const browser = await puppeteer.launch()
         const page = await browser.newPage()
@@ -35,11 +43,24 @@ const generateDigitalResume = async (req, res) => {
     } catch (e) {
         console.log(e)
     }
+
+    // return pdf to client
+    const filePath = path.join(process.cwd(), '/lib/output/resume.pdf')
+    let fileStream = fs.createReadStream(filePath)
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=resume.pdf');
+    fileStream.pipe(res);
+
 }
 
 const getUserProfile = (userId) => {
-    let sql = `select user_full_name, email, ethereum_address from profile_receiver p where user_id = ${userId}`
+    let sql = `select user_full_name, email from profile_receiver p where user_id = ${userId}`
     return db.query(sql)
+}
+
+const getVerificationLink = (certId) => {
+    let link = "http://localhost:3000/cert/verify/" + certId
+    return link
 }
 
 export default { generateDigitalResume }

@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx'
 import { http } from '@/utils'
+import download from 'downloadjs'
 
 class ResumeStore {
     constructor() {
@@ -8,12 +9,13 @@ class ResumeStore {
 
     generateDigitalResume = async (userId, certificateList) => {
         try {
-            const res = await http.post('/resume/generate', {
+            await http.post('/resume/generate', {
                 userId,
-                certificateList
+                certificateList,
+            }, {responseType: 'blob'}).then(res => {
+                download(new Blob([res.data]), 'resume.pdf', 'application/pdf');
             })
 
-            console.log(res)
 
         } catch (e) {
             console.log(e)

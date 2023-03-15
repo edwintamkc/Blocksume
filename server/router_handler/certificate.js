@@ -33,13 +33,13 @@ const assignCert = async (req, res) => {
                 await db.rollback()
 
                 console.log('error exists in db.query:\n' + error)
-                return res.cc(process.env.ASSIGN_CERT_FAIL)
+                return res.cc(process.env.ASSIGN_CERT_FAIL, 1)
             })
     } catch (error) {
         await db.rollback()
 
         console.log('error exists in assignCert try-catch:\n' + error)
-        return res.cc(process.env.ASSIGN_CERT_FAIL)
+        return res.cc(process.env.ASSIGN_CERT_FAIL, 1)
     }
 }
 
@@ -143,4 +143,55 @@ const getCombinedStrOfCert = async (certId) => {
     return str
 }
 
-export default { assignCert, getCertificateList, getRecipientFullNameByUserId }
+const verifyCertByCertId = async (req, res) => {
+    const certId = req.query.certId
+
+    // check if this cert exists
+    // if not then return error
+    let sql = `select certificate_ref_id, certificate_name, issue_organization_name, receiver_name, 
+        duration_start_date, duration_end_date, DATE_FORMAT(issue_date, '%Y-%m-%d') as issue_date,  
+        DATE_FORMAT(valid_until_date, '%Y-%m-%d') as valid_until_date, description from certificate 
+        where certificate_id = ${certId}`
+
+    const results = await db.query(sql)
+    if (results.length !== 1) {
+        // cert not exists, return error
+        return res.cc(process.env.INVALID_CERT_NUMBER, 1)
+    } else {
+        // cert exists, compare hash
+
+        // get hash from blockchain
+        const hashFromBlockchain = await contract.methods.getHashByTransactionId(certId).call()
+
+        // get hash from database
+        const hashFromDatabase = await genHashOfCertByCertId(certId)
+
+        // hash equals means it is a valid cert
+        // return cert data
+        if (hashFromBlockchain === hashFromDatabase) {
+            res.send({
+                status: 0,
+                message: process.env.THIS_IS_A_VALID_CERT,
+
+                certificateRefId: results[0].certificate_ref_id,
+                certificateName: results[0].certificate_name,
+                issueOrganizationName: results[0].issue_organization_name,
+                receiverName: results[0].receiver_name,
+                durationStartDay: results[0].duration_start_date,
+                durationEndDay: results[0].duration_end_date,
+                issueDate: results[0].issue_date,
+                validUntilDate: results[0].valid_until_date,
+                description: results[0].description
+
+            })
+        } else {
+            res.send({
+                status: 1,
+                message: process.env.THIS_IS_AN_INVALID_CERT,
+            })
+        }
+    }
+
+}
+
+export default { assignCert, getCertificateList, getRecipientFullNameByUserId, verifyCertByCertId }
