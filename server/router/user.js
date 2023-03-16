@@ -16,4 +16,8 @@ router.post('/api/login', userHandler.login)
 // get user info
 router.get('/user/info', userHandler.getUserInfo)
 
+// check access code for cert verification
+router.post('/api/checkVerificationAccessCode', userHandler.checkVerificationAccessCode)
+
 export default router
+

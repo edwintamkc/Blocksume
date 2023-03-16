@@ -28,8 +28,8 @@ const registerAsIssuer = (req, res) => {
         const emailDomain = userInfo.email.slice(userInfo.email.indexOf('@') + 1)
         sqlStr = `select * from company where company_email_domain = '${emailDomain}'`
         const matchedEmails = await db.query(sqlStr)
-        
-        if(matchedEmails.length === 0){
+
+        if (matchedEmails.length === 0) {
             return res.cc(process.env.INVALID_EMAIL_DOMAIN, 1)
         }
 
@@ -50,7 +50,7 @@ const registerAsIssuer = (req, res) => {
 }
 
 const registerAsReceiver = (req, res) => {
-    
+
 }
 
 const login = (req, res) => {
@@ -94,7 +94,7 @@ const getUserInfo = async (req, res) => {
 
     let isIssuer = await checkIsIssuer(userInfo.username)
 
-    if(isIssuer){ // cert issuer
+    if (isIssuer) { // cert issuer
         getCertificateIssuerInfo(userInfo.username, req, res)
     } else { // cert receiver
         getCertificateReceiverInfo(userInfo.username, req, res)
@@ -106,7 +106,7 @@ const checkIsIssuer = async (username) => {
     let sqlStr = `select user_identifier from all_users where username = "${username}"`
 
     let result = null
-    await db.query(sqlStr).then( data => {
+    await db.query(sqlStr).then(data => {
         // database setting: user_identifier = 1 means certificate issuer, user_identifier = 2 means certificate receiver
         result = data[0].user_identifier === 1 ? true : false
     })
@@ -147,7 +147,7 @@ const getCertificateIssuerInfo = (username, req, res) => {
 
 const getCertificateReceiverInfo = (username, req, res) => {
     let sqlStr = 'select * from all_users a, profile_receiver p where a.username = ? and a.user_id = p.user_id'
-    
+
     db.query(sqlStr, username, (err, results) => {
         // error exist
         if (err) {
@@ -168,9 +168,28 @@ const getCertificateReceiverInfo = (username, req, res) => {
             profileId: results[0].profile_id,
             userIdentifier: results[0].user_identifier,
             email: results[0].email,
-            userFullName: results[0].user_full_name
+            userFullName: results[0].user_full_name,
+            verificationAccessCode: results[0].verification_access_code
         })
     })
 }
 
-export default { registerAsIssuer, registerAsReceiver, login, getUserInfo }
+const checkVerificationAccessCode = async (req, res) => {
+    const verificationAccessCode = req.body.verificationAccessCode
+    const certId = req.body.certId
+
+    let sqlStr = `select verification_access_code from profile_receiver where user_id = (select receiver_id from transaction where certificate_id = ${certId})`
+    const results = await db.query(sqlStr)
+    if (results.length === 0) {
+        return res.cc(process.env.INVALID_CERT_NUMBER, 1)
+    }
+
+    if (results[0].verification_access_code === verificationAccessCode) {
+        return res.cc(process.env.SUCCESS, 0)
+    } else {
+        return res.cc(process.env.INVALID_ACCESS_CODE, 1)
+    }
+
+}
+
+export default { registerAsIssuer, registerAsReceiver, login, getUserInfo, checkVerificationAccessCode }

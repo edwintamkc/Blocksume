@@ -37,8 +37,13 @@
         left: 65%;
     }
 
-    .userProfile {
-        text-align: center;
+    .email {
+        margin-left: 16%;
+    }
+
+    .verificationAccessCode {
+        float: right;
+        margin-right: 10%
     }
 </style>
 <html>
@@ -46,7 +51,10 @@
 <body>
     <div class="title">
         <h1>{{userProfile.user_full_name}}</h1>
-        <div class="userProfile">email: {{userProfile.email}}</div>
+        <div class="userProfile">
+            <span class="email">Email: {{userProfile.email}}</span>
+            <span class="verificationAccessCode">Access code for verification: {{userProfile.verification_access_code}}</span>
+        </div>
         <div class="hori-line"></div>
     </div>
     <div class="detail">

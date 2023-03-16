@@ -9,7 +9,7 @@ const generateDigitalResume = async (req, res) => {
     let data = req.body
 
     // get user profile and add it to data
-    let result = await getUserProfile(data.userId)
+    let result = await getReceiverProfile(data.userId)
     data.userProfile = result[0]
 
     // get verification link for each cert and add it to data
@@ -53,8 +53,8 @@ const generateDigitalResume = async (req, res) => {
 
 }
 
-const getUserProfile = (userId) => {
-    let sql = `select user_full_name, email from profile_receiver p where user_id = ${userId}`
+const getReceiverProfile = (userId) => {
+    let sql = `select user_full_name, email, verification_access_code from profile_receiver p where user_id = ${userId}`
     return db.query(sql)
 }
 

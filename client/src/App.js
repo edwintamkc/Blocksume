@@ -22,14 +22,14 @@ function App() {
               </AuthComponent>}
             >
               
-              <Route index element={<Home />}></Route>
+              {/* <Route index element={<Home />}></Route> */}
               <Route path='/user/info' element={<UserInfo />}></Route>
               <Route path='/cert/assign' element={<AssignCert />}></Route>
               <Route path='/cert/manage' element={<ManageCert />}></Route>
 
             </Route>
             
-            <Route path='/login' element={<Login />}></Route>
+            <Route index path='/login' element={<Login />}></Route>
             <Route path='/register/issuer' element={<Register />}></Route> 
             <Route path='/register/receiver' element={<Register />}></Route> 
             <Route path='/register/system-select' element={<SystemSelect />}></Route>

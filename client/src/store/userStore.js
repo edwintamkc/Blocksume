@@ -33,6 +33,15 @@ class UserStore {
         })
     }
 
+    checkVerificationAccessCode = async ({verificationAccessCode, certId}) => {
+        const res = await http.post('/api/checkVerificationAccessCode', {
+            verificationAccessCode,
+            certId
+        })
+
+        return res.data
+    }
+
     getUserInfo = async () => {
 
         await http.get('/user/info', {
@@ -52,6 +61,7 @@ class UserStore {
             this.userInfo.position = data.position
             this.userInfo.email = data.email
             this.userInfo.userFullName = data.userFullName
+            this.userInfo.verificationAccessCode = data.verificationAccessCode
 
         }).catch((e) => {
             console.log(e)
