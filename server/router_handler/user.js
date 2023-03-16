@@ -2,39 +2,55 @@ import db from '../config/database.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
-const register = (req, res) => {
+
+// TODO: finish registration for issuer and receiver
+const registerAsIssuer = (req, res) => {
     const userInfo = req.body
+    console.log(userInfo)
 
     if (!userInfo.username || !userInfo.password) {
-        return res.cc(process.env.INVALID_USERNAME_OR_PASSWORD)
+        return res.cc(process.env.INVALID_USERNAME_OR_PASSWORD, 1)
     }
 
     // check if this user exists
     let sqlStr = 'select * from all_users where username=?'
-    db.query(sqlStr, userInfo.username, (err, results) => {
+    db.query(sqlStr, userInfo.username, async (err, results) => {
         // error exist
         if (err) {
-            return res.cc(err)
+            return res.cc(err, 1)
         }
         // username duplicate
         if (results.length > 0) {
-            return res.cc(process.env.DUPLICATE_USERNAME)
+            return res.cc(process.env.DUPLICATE_USERNAME, 1)
         }
 
-        // register
-        // 1. encrypt password
-        userInfo.password = bcrypt.hashSync(userInfo.password, 10)
+        // check email domain
+        const emailDomain = userInfo.email.slice(userInfo.email.indexOf('@') + 1)
+        sqlStr = `select * from company where company_email_domain = '${emailDomain}'`
+        const matchedEmails = await db.query(sqlStr)
+        
+        if(matchedEmails.length === 0){
+            return res.cc(process.env.INVALID_EMAIL_DOMAIN, 1)
+        }
 
-        // 2. insert
-        sqlStr = 'insert into all_users set ?'
-        db.query(sqlStr, { ...userInfo }, (err, results) => {
-            if (err) {
-                return res.cc(err)
-            }
-            res.cc(process.env.SUCCESS, 0)
-        })
+        // // register
+        // // 1. encrypt password
+        // userInfo.password = bcrypt.hashSync(userInfo.password, 10)
+
+        // // 2. insert
+        // sqlStr = 'insert into all_users set ?'
+        // db.query(sqlStr, { ...userInfo }, (err, results) => {
+        //     if (err) {
+        //         return res.cc(err)
+        //     }
+        //     res.cc(process.env.SUCCESS, 0)
+        // })
 
     })
+}
+
+const registerAsReceiver = (req, res) => {
+    
 }
 
 const login = (req, res) => {
@@ -48,16 +64,16 @@ const login = (req, res) => {
     db.query(sqlStr, userInfo.username, (err, results) => {
         // error exist
         if (err) {
-            return res.cc(err)
+            return res.cc(err, 1)
         }
         if (results.length !== 1) {
-            return res.cc(process.env.INCORRECT_USERNAME)
+            return res.cc(process.env.INCORRECT_USERNAME, 1)
         }
 
         // compare encrypted password
         const isSamePassword = bcrypt.compareSync(userInfo.password, results[0].password)
         if (!isSamePassword) {
-            return res.cc(process.env.INCORRECT_PASSWORD)
+            return res.cc(process.env.INCORRECT_PASSWORD, 1)
         }
 
         // success
@@ -104,10 +120,10 @@ const getCertificateIssuerInfo = (username, req, res) => {
     db.query(sqlStr, username, (err, results) => {
         // error exist
         if (err) {
-            return res.cc(err)
+            return res.cc(err, 1)
         }
         if (results.length !== 1) {
-            return res.cc(process.env.CANNOT_RETRIEVE_USER_INFO)
+            return res.cc(process.env.CANNOT_RETRIEVE_USER_INFO, 1)
         }
 
         // no error
@@ -135,10 +151,10 @@ const getCertificateReceiverInfo = (username, req, res) => {
     db.query(sqlStr, username, (err, results) => {
         // error exist
         if (err) {
-            return res.cc(err)
+            return res.cc(err, 1)
         }
         if (results.length !== 1) {
-            return res.cc(process.env.CANNOT_RETRIEVE_USER_INFO)
+            return res.cc(process.env.CANNOT_RETRIEVE_USER_INFO, 1)
         }
 
         // no error
@@ -157,4 +173,4 @@ const getCertificateReceiverInfo = (username, req, res) => {
     })
 }
 
-export default { register, login, getUserInfo }
+export default { registerAsIssuer, registerAsReceiver, login, getUserInfo }

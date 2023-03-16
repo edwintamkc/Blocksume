@@ -31,6 +31,7 @@ function App() {
             
             <Route path='/login' element={<Login />}></Route>
             <Route path='/register/issuer' element={<Register />}></Route> 
+            <Route path='/register/receiver' element={<Register />}></Route> 
             <Route path='/register/system-select' element={<SystemSelect />}></Route>
             <Route path='/cert/verify/:certId' element={<VerifyCert />}></Route>
           </Routes>

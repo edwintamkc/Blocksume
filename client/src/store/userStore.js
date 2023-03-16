@@ -14,6 +14,24 @@ class UserStore {
             storage: window.localStorage
         })
     }
+    
+    registerIssuer = async ({username, password, email}) => {
+        const res = await http.post('/api/register/issuer', {
+            username,
+            password,
+            email
+        })
+    }
+
+    registerReceiver = async ({username, password, email, fullName, accessCode}) => {
+        const res = await http.post('/api/register/receiver', {
+            username,
+            password,
+            email,
+            fullName,
+            accessCode
+        })
+    }
 
     getUserInfo = async () => {
 

@@ -3,7 +3,6 @@ import { useEffect } from 'react'
 import { useStore } from '@/store'
 import { observer } from 'mobx-react-lite'
 import { Card, Result } from 'antd'
-import logo from '@/assets/logo.png'
 import './verifyCert.scss'
 
 const VerifyCert = () => {
@@ -38,10 +37,7 @@ const VerifyCert = () => {
                 </Card>
             }
 
-
-
-
-            {/* only display the following if it is a invalid cert */}
+            {/* only display the following if it is an invalid cert */}
             {!certificateStore.isValidCert &&
                 <Card className="verification-container-invalid-cert">
                     <Result status="error" title="This is an invalid certificate" />

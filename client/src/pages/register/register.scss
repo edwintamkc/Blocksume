@@ -6,10 +6,20 @@
     top: 0;
     background: center/cover url('~@/assets/login.png');
 
-    .register-container {
+    .register-container-issuer {
         width: 40%;
-        height: 100%;
+        height: 50%;
         position: absolute;
+        top: 20%;
+        left: 30%;
+        box-shadow: 0 0 50px rgb(0 0 0 / 10%);
+    }
+
+    .register-container-receiver {
+        width: 40%;
+        height: 60%;
+        position: absolute;
+        top: 20%;
         left: 30%;
         box-shadow: 0 0 50px rgb(0 0 0 / 10%);
     }

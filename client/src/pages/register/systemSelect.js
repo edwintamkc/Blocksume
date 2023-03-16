@@ -1,4 +1,4 @@
-import { Card, Button } from 'antd'
+import { Card, Button, Row, Col } from 'antd'
 import './systemSelect.scss'
 import { useNavigate } from 'react-router-dom'
 
@@ -7,15 +7,22 @@ function SystemSelect() {
 
     return (
         <div className="systemSelect">
-            <Card className="systemSelect-container">
+            <div className="systemSelect-container">
                 <h1>Are you a</h1>
-                <Button type="primary" className="button" size="large" onClick={() => navigate("/register/issuer")}>
-                    Certificate issuer
-                </Button>
-                <Button type="primary" className="button" size="large">
-                    Certificate receiver
-                </Button>
-            </Card>
+                <Row>
+                    <Col span={6} offset={4}>
+                        <Button type="primary" className="button" onClick={() => navigate("/register/issuer")} ghost>
+                            Certificate issuer
+                        </Button>
+                    </Col>
+                    <Col span={6} offset={4}>
+                        <Button type="primary" className="button" onClick={() => navigate("/register/receiver")} ghost>
+                            Certificate receiver
+                        </Button>
+                    </Col>
+
+                </Row>
+            </div>
         </div>
     )
 }
