@@ -5,6 +5,7 @@ import { makePersistable } from "mobx-persist-store"
 class CertificateStore {
     certificateList = []
     verifiedCert = {}
+    isValidCert = false
 
     constructor() {
         makeAutoObservable(this)
@@ -78,6 +79,8 @@ class CertificateStore {
             this.verifiedCert.issueDate = data.issueDate
             this.verifiedCert.validUntilDate = data.validUntilDate
             this.verifiedCert.description = data.description
+
+            this.isValidCert = data.status
 
         }).catch((e) => {
             console.log(e)
