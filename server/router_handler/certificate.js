@@ -4,6 +4,7 @@ import validator from '../utils/validator.js'
 import { getHashByString, parseStringToDate } from '../utils/utils.js'
 import { contract, ethAccount } from '../config/web3.js'
 
+
 const assignCert = async (req, res) => {
     const values = req.body.values
 
