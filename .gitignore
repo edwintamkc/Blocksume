@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 
+# email config
+/server/config/email.js
+
 # testing
 /**/coverage
 
