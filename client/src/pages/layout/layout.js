@@ -54,9 +54,9 @@ const GeekLayout = () => {
                         defaultSelectedKeys={[pathname]}
                         style={{ height: '100%', borderRight: 0 }}
                     >
-                        <Menu.Item icon={<HomeOutlined />} key="/">
+                        {/* <Menu.Item icon={<HomeOutlined />} key="/">
                             <Link to="/">Home</Link>
-                        </Menu.Item>
+                        </Menu.Item> */}
 
                         <Menu.Item icon={<UserOutlined />} key="/user/info">
                             <Link to="/user/info">User information</Link>

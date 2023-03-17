@@ -9,24 +9,24 @@ import {
     SolutionOutlined,
     HomeOutlined,
     MailOutlined,
-    EnvironmentOutlined
-  } from '@ant-design/icons'
+    FolderViewOutlined
+} from '@ant-design/icons'
 
 const UserInfo = () => {
     const { userStore } = useStore()
 
     return (
-        <Row style={{height: '100%'}}>
+        <Row style={{ height: '100%' }}>
             <Col span={24}>
                 <Card title={
-                        <Breadcrumb separator='>'>
-                            <Breadcrumb.Item>User information</Breadcrumb.Item>
-                        </Breadcrumb>}
-                        style={{height: '100%'}}
-                    >
+                    <Breadcrumb separator='>'>
+                        <Breadcrumb.Item>User information</Breadcrumb.Item>
+                    </Breadcrumb>}
+                    style={{ height: '100%' }}
+                >
                     <img className="userIcon" src={avatar} alt='' />
                     <div className='userName'>{userStore.userInfo.username}</div>
-                    
+
                     <Row className='userInfo'>
                         <Col span={6} offset={6}>
                             <UserOutlined /> User id: {userStore.userInfo.userId}
@@ -37,7 +37,7 @@ const UserInfo = () => {
 
                         {/* only display the following detail when it is certificate issuer
                             note that 1 = issuer, 2 = receiver */}
-                        { (userStore.userInfo.userIdentifier == 1 ? true : false) && 
+                        {(userStore.userInfo.userIdentifier == 1 ? true : false) &&
                             <>
                                 <Col span={6} offset={6}>
                                     <HomeOutlined /> Company: {userStore.userInfo.companyName}
@@ -51,11 +51,21 @@ const UserInfo = () => {
                         <Col span={6} offset={6}>
                             <MailOutlined /> Email: {userStore.userInfo.email}
                         </Col>
-                        <Col span={6} offset={4}>
-                            <EnvironmentOutlined /> Ethereum address: {userStore.userInfo.ethAddress}
-                        </Col>
+
+                        {/* only display the following detail when it is certificate receiver
+                            note that 1 = issuer, 2 = receiver */}
+                        {(userStore.userInfo.userIdentifier == 2 ? true : false) &&
+                            <>
+                                <Col span={6} offset={4}>
+                                    <SolutionOutlined /> Name: {userStore.userInfo.userFullName}
+                                </Col>
+                                <Col span={6} offset={6}>
+                                    <FolderViewOutlined /> Verification access code: {userStore.userInfo.verificationAccessCode}
+                                </Col>
+                            </>
+                        }
                     </Row>
-                    
+
                 </Card>
             </Col>
         </Row>

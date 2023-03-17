@@ -6,9 +6,10 @@ import '@/App.css'
 import { AuthComponent } from '@/components/authComponent'
 import Home from '@/pages/home/home'
 import AssignCert from '@/pages/cert/assignCert'
-import ManageCert from './pages/cert/manageCert'
+import ManageCert from '@/pages/cert/manageCert'
 import UserInfo from '@/pages/user/userInfo'
 import SystemSelect from '@/pages/register/systemSelect'
+import VerifyCert from '@/pages/cert/verifyCert'
 
 function App() {
   return (
@@ -21,16 +22,18 @@ function App() {
               </AuthComponent>}
             >
               
-              <Route index element={<Home />}></Route>
+              {/* <Route index element={<Home />}></Route> */}
               <Route path='/user/info' element={<UserInfo />}></Route>
               <Route path='/cert/assign' element={<AssignCert />}></Route>
               <Route path='/cert/manage' element={<ManageCert />}></Route>
 
             </Route>
             
-            <Route path='/login' element={<Login />}></Route>
-            <Route path='/register/issuer' element={<Register />}></Route>
+            <Route index path='/login' element={<Login />}></Route>
+            <Route path='/register/issuer' element={<Register />}></Route> 
+            <Route path='/register/receiver' element={<Register />}></Route> 
             <Route path='/register/system-select' element={<SystemSelect />}></Route>
+            <Route path='/cert/verify/:certId' element={<VerifyCert />}></Route>
           </Routes>
         </div>
     </BrowserRouter>

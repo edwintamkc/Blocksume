@@ -4,8 +4,11 @@ import userHandler from '../router_handler/user.js'
 const router = express.Router()
 
 
-// register
-router.post('/api/register', userHandler.register)
+// register as issuer
+router.post('/api/register/issuer', userHandler.registerAsIssuer)
+
+// register as receiver
+router.post('/api/register/receiver', userHandler.registerAsReceiver)
 
 // login
 router.post('/api/login', userHandler.login)
@@ -13,4 +16,8 @@ router.post('/api/login', userHandler.login)
 // get user info
 router.get('/user/info', userHandler.getUserInfo)
 
+// check access code for cert verification
+router.post('/api/checkVerificationAccessCode', userHandler.checkVerificationAccessCode)
+
 export default router
+

@@ -34,7 +34,16 @@
     
     .certificateRefId {
         position: absolute;
-        left: 60%;
+        left: 65%;
+    }
+
+    .email {
+        margin-left: 16%;
+    }
+
+    .verificationAccessCode {
+        float: right;
+        margin-right: 10%
     }
 </style>
 <html>
@@ -42,8 +51,10 @@
 <body>
     <div class="title">
         <h1>{{userProfile.user_full_name}}</h1>
-        <span style="margin-right: 20%; margin-left:10%">email: {{userProfile.email}}</span>
-        <span>ethereum_address: {{userProfile.ethereum_address}}</span>
+        <div class="userProfile">
+            <span class="email">Email: {{userProfile.email}}</span>
+            <span class="verificationAccessCode">Access code for verification: {{userProfile.verification_access_code}}</span>
+        </div>
         <div class="hori-line"></div>
     </div>
     <div class="detail">
@@ -51,12 +62,13 @@
 
         {{#each certificateList as |cert|}}
         <h4>{{cert.certificate_name}}</h4>
-        <a href="google.com">(test url)</a>
+        <a href={{cert.verification_link}}>({{cert.verification_link}})</a>
         <span class="certificateRefId">Certificate Id: {{cert.certificate_ref_id}}</span>
         <br />
         <p>Issue organization: {{cert.issue_organization_name}}</p>
         <p>Duration: {{cert.duration_start_date}} to {{cert.duration_end_date}}</p>
         <p>Issue date: {{cert.issue_date}}</p>
+        <p>Valid until: {{cert.valid_until_date}}</p>
         <p>Description: {{cert.description}}</p>
         {{/each}}
     </div>

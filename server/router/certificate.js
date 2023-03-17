@@ -9,7 +9,10 @@ router.post('/certificate/assign', certificateHandler.assignCert)
 // get certificate list by userId
 router.get('/certificate', certificateHandler.getCertificateList) 
 
-// get getBlockchain address by userId
-router.get('/certificate/getBlockchainAddressByUserId', certificateHandler.getBlockchainAddressByUserId)
+// get user full name by userId (only accept user type = receiver)
+router.get('/certificate/getRecipientFullNameByUserId', certificateHandler.getRecipientFullNameByUserId)
+
+// verify cert by cert Id
+router.get('/api/certificate/verifyCertByCertId', certificateHandler.verifyCertByCertId)
 
 export default router

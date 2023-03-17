@@ -12,16 +12,25 @@
         position: absolute;
         top: 30%;
         left: 30%;
-        box-shadow: 0 0 50px rgb(0 0 0 / 10%);
     }
 }
 
 h1 {
     color: #111;
     font-family: 'Helvetica Neue', sans-serif;
-    font-size: 60px;
+    font-size: 50px;
     font-weight: bold;
     letter-spacing: -1px;
     line-height: 1;
     text-align: center;
+}
+
+.button {
+    margin-top: 15%;
+    height: 120%;
+    width: 100%;
+}
+
+.button * {
+    font-size: 16px;
 }

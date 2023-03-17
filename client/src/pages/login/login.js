@@ -18,7 +18,7 @@ function Login() {
             // login success
             if (res.status === true) {
                 // navigate to home page
-                navigate('/')
+                navigate('/user/info')
                 // show login success msg
                 message.success(res.message)
 
