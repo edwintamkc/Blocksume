@@ -33,7 +33,7 @@ const assignCert = async (req, res) => {
             }).catch(async error => {
                 await db.rollback()
 
-                console.log('error exists in db.query:\n' + error)
+                console.log('error exists in assignCert db.query:\n' + error)
                 return res.cc(process.env.ASSIGN_CERT_FAIL, 1)
             })
     } catch (error) {

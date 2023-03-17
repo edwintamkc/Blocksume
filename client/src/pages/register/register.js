@@ -2,12 +2,14 @@ import {
     Button,
     Form,
     Input,
-    Card
+    Card,
+    message
 } from 'antd';
 import './register.scss'
 import logo from '@/assets/logo.png'
 import { useStore } from '@/store'
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'
 
 const formItemLayout = {
     labelCol: {
@@ -42,13 +44,13 @@ const tailFormItemLayout = {
 
 const Register = () => {
     const { userStore } = useStore()
-    const [form] = Form.useForm();
+    const [formIssuer, formReceiver] = Form.useForm();
     const [userIdentifier, setUserIdentifier] = useState()
+    const navigate = useNavigate()
 
     useEffect(() => {
         const parts = window.location.href.split('/')
         setUserIdentifier(parts[parts.length - 1])
-        console.log(userIdentifier)
     })
     
 
@@ -56,8 +58,16 @@ const Register = () => {
         const res = await userStore.registerIssuer({
             username: values.username,
             password: values.password,
-            email: values.email
+            email: values.email,
+            position: values.position
         })
+
+        if(res.status === true){
+            message.success(res.message)
+            navigate('/login')
+        } else if(res.status === false){
+            message.error(res.message)
+        }
     }
 
     const onFinishReceiver = async (values) => {
@@ -68,6 +78,13 @@ const Register = () => {
             fullName: values.fullName,
             accessCode: values.accessCode
         })
+
+        if(res.status === true){
+            message.success(res.message)
+            navigate('/login')
+        } else if(res.status === false){
+            message.error(res.message)
+        }
     }
 
     return (
@@ -78,7 +95,7 @@ const Register = () => {
                     <img className="blocksume-logo" src={logo} alt="" />
                     <Form
                         {...formItemLayout}
-                        form={form}
+                        form={formIssuer}
                         name="register"
                         onFinish={onFinishIssuer}
                         style={{
@@ -154,6 +171,19 @@ const Register = () => {
                             <Input />
                         </Form.Item>
 
+                        <Form.Item
+                            name="position"
+                            label="Job position"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input your position!',
+                                },
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+
                         <Form.Item {...tailFormItemLayout}>
                             <Button type="primary" htmlType="submit">
                                 Register
@@ -169,7 +199,7 @@ const Register = () => {
                     <img className="blocksume-logo" src={logo} alt="" />
                     <Form
                         {...formItemLayout}
-                        form={form}
+                        form={formReceiver}
                         name="register"
                         onFinish={onFinishReceiver}
                         style={{

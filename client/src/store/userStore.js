@@ -15,12 +15,15 @@ class UserStore {
         })
     }
     
-    registerIssuer = async ({username, password, email}) => {
+    registerIssuer = async ({username, password, email, position}) => {
         const res = await http.post('/api/register/issuer', {
             username,
             password,
-            email
+            email,
+            position
         })
+
+        return res.data
     }
 
     registerReceiver = async ({username, password, email, fullName, accessCode}) => {
@@ -31,6 +34,8 @@ class UserStore {
             fullName,
             accessCode
         })
+
+        return res.data
     }
 
     checkVerificationAccessCode = async ({verificationAccessCode, certId}) => {

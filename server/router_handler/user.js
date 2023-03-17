@@ -1,18 +1,23 @@
 import db from '../config/database.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import { getHashByString } from '../utils/utils.js'
+import { sendVerificationEmail } from '../service/email.js'
+import moment from 'moment'
 
 
-// TODO: finish registration for issuer and receiver
 const registerAsIssuer = (req, res) => {
+    console.log('start registrating as issuer')
+
     const userInfo = req.body
-    console.log(userInfo)
+    const currentTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
 
     if (!userInfo.username || !userInfo.password) {
         return res.cc(process.env.INVALID_USERNAME_OR_PASSWORD, 1)
     }
 
-    // check if this user exists
+    // 1. checking
+    // 1.1 check if this username exists
     let sqlStr = 'select * from all_users where username=?'
     db.query(sqlStr, userInfo.username, async (err, results) => {
         // error exist
@@ -24,33 +29,171 @@ const registerAsIssuer = (req, res) => {
             return res.cc(process.env.DUPLICATE_USERNAME, 1)
         }
 
-        // check email domain
-        const emailDomain = userInfo.email.slice(userInfo.email.indexOf('@') + 1)
-        sqlStr = `select * from company where company_email_domain = '${emailDomain}'`
+        // 1.2 check if this email already registered
+        sqlStr = `select 1 from profile_issuer where email = "${userInfo.email}"`
         const matchedEmails = await db.query(sqlStr)
 
-        if (matchedEmails.length === 0) {
+        if (matchedEmails.length > 0) {
+            return res.cc(process.env.DUPLICATE_EMAIL, 1)
+        }
+
+        // 1.3 check if the email domain exists
+        const emailDomain = userInfo.email.slice(userInfo.email.indexOf('@') + 1)
+        sqlStr = `select 1 from company where company_email_domain = "${emailDomain}"`
+        const matchedCompanies = await db.query(sqlStr)
+
+        if (matchedCompanies.length === 0) {
             return res.cc(process.env.INVALID_EMAIL_DOMAIN, 1)
         }
 
-        // // register
-        // // 1. encrypt password
-        // userInfo.password = bcrypt.hashSync(userInfo.password, 10)
+        // 2. prepare verification code
+        const verificationCode = getHashByString(userInfo.username + userInfo.password)
 
-        // // 2. insert
-        // sqlStr = 'insert into all_users set ?'
-        // db.query(sqlStr, { ...userInfo }, (err, results) => {
-        //     if (err) {
-        //         return res.cc(err)
-        //     }
-        //     res.cc(process.env.SUCCESS, 0)
-        // })
+        // 3. encrypt password
+        userInfo.password = bcrypt.hashSync(userInfo.password, 10)
 
+        // 4. register
+        await db.beginTransaction()
+
+        try {
+            // 4.1 insert into profile_issuer
+            let company_id = matchedCompanies[0].company_id
+            sqlStr = `insert into profile_issuer (company_id, position, email, creation_date, last_modify_date) 
+            values ("${company_id}", "${userInfo.position}", "${userInfo.email}", "${currentTime}", "${currentTime}")`
+
+            db.query(sqlStr).then(profileData => {
+
+                // 4.2 insert into all_users
+                sqlStr = `insert into all_users (username, password, profile_id, user_identifier, creation_date, last_modify_date)
+                values ("${userInfo.username}", "${userInfo.password}", "${profileData.insertId}", 1, "${currentTime}", "${currentTime}")`
+
+                db.query(sqlStr).then(userData => {
+                    // 4.3 update user id to profile_issuer
+                    sqlStr = `update profile_issuer set user_id = ${userData.insertId} where profile_id = "${profileData.insertId}"`
+                    db.query(sqlStr)
+
+                    // 4.4 insert into account_verification
+                    sqlStr = `insert into account_verification (user_id, verification_code, is_verified, creation_date, last_modify_date)
+                        values ("${userData.insertId}", "${verificationCode}", "false", "${currentTime}", "${currentTime}")`
+                    db.query(sqlStr).then(async accountVerificationInfo => {
+
+                        await db.commit()
+
+                        // 5. send verification email
+                        const verificationLink = 'http://localhost:3000/account/activate/' + verificationCode
+                        await sendVerificationEmail(userInfo.email, verificationLink)
+
+                        return res.cc(process.env.SUCCESS, 0)
+
+                    }).catch(async error => {
+
+                        await db.rollback()
+
+                        console.log('error exists in registerAsIssuer db.query:\n' + error)
+                        return res.cc(process.env.REGISTRATION_FAIL, 1)
+                    })
+                })
+            })
+        } catch (error) {
+            await db.rollback()
+
+            console.log('error exists in registerAsIssuer try-catch:\n' + error)
+            return res.cc(process.env.REGISTRATION_FAIL, 1)
+        } finally {
+
+            console.log('end registrating as issuer')
+        }
     })
 }
 
 const registerAsReceiver = (req, res) => {
+    console.log('start registrating as receiver')
 
+    const userInfo = req.body
+    const currentTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
+
+    if (!userInfo.username || !userInfo.password) {
+        return res.cc(process.env.INVALID_USERNAME_OR_PASSWORD, 1)
+    }
+
+    // 1. checking
+    // 1.1 check if this username exists
+    let sqlStr = 'select * from all_users where username=?'
+    db.query(sqlStr, userInfo.username, async (err, results) => {
+        // error exist
+        if (err) {
+            return res.cc(err, 1)
+        }
+        // username duplicate
+        if (results.length > 0) {
+            return res.cc(process.env.DUPLICATE_USERNAME, 1)
+        }
+
+        // 1.2 check if this email already registered
+        sqlStr = `select 1 from profile_receiver where email = "${userInfo.email}"`
+        const matchedEmails = await db.query(sqlStr)
+
+        if (matchedEmails.length > 0) {
+            return res.cc(process.env.DUPLICATE_EMAIL, 1)
+        }
+
+        // 2. prepare verification code
+        const verificationCode = getHashByString(userInfo.username + userInfo.password)
+
+        // 3. encrypt password
+        userInfo.password = bcrypt.hashSync(userInfo.password, 10)
+
+        // 4. register
+        await db.beginTransaction()
+
+        try {
+            // 4.1 insert into profile_receiver
+            sqlStr = `insert into profile_receiver (user_full_name, email, verification_access_code, creation_date, last_modify_date) 
+            values ("${userInfo.fullName}", "${userInfo.email}", "${userInfo.accessCode}", "${currentTime}", "${currentTime}")`
+
+            db.query(sqlStr).then(profileData => {
+
+                // 4.2 insert into all_users
+                sqlStr = `insert into all_users (username, password, profile_id, user_identifier, creation_date, last_modify_date)
+                values ("${userInfo.username}", "${userInfo.password}", "${profileData.insertId}", 1, "${currentTime}", "${currentTime}")`
+
+                db.query(sqlStr).then(userData => {
+                    // 4.3 update user id to profile_receiver
+                    sqlStr = `update profile_receiver set user_id = ${userData.insertId} where profile_id = "${profileData.insertId}"`
+                    db.query(sqlStr)
+
+                    // 4.4 insert into account_verification
+                    sqlStr = `insert into account_verification (user_id, verification_code, is_verified, creation_date, last_modify_date)
+                        values ("${userData.insertId}", "${verificationCode}", "false", "${currentTime}", "${currentTime}")`
+                    db.query(sqlStr).then(async accountVerificationInfo => {
+
+                        await db.commit()
+
+                        // 5. send verification email
+                        const verificationLink = 'http://localhost:3000/account/activate/' + verificationCode
+                        await sendVerificationEmail(userInfo.email, verificationLink)
+
+                        return res.cc(process.env.SUCCESS, 0)
+
+                    }).catch(async error => {
+
+                        await db.rollback()
+
+                        console.log('error exists in registerAsIssuer db.query:\n' + error)
+                        return res.cc(process.env.REGISTRATION_FAIL, 1)
+                    })
+                })
+            })
+        } catch (error) {
+            await db.rollback()
+
+            console.log('error exists in registerAsReceiver try-catch:\n' + error)
+            return res.cc(process.env.REGISTRATION_FAIL, 1)
+        } finally {
+
+            console.log('end registrating as receiver')
+        }
+    })
 }
 
 const login = (req, res) => {
