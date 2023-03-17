@@ -155,7 +155,7 @@ const registerAsReceiver = (req, res) => {
 
                 // 4.2 insert into all_users
                 sqlStr = `insert into all_users (username, password, profile_id, user_identifier, creation_date, last_modify_date)
-                values ("${userInfo.username}", "${userInfo.password}", "${profileData.insertId}", 1, "${currentTime}", "${currentTime}")`
+                values ("${userInfo.username}", "${userInfo.password}", "${profileData.insertId}", 2, "${currentTime}", "${currentTime}")`
 
                 db.query(sqlStr).then(userData => {
                     // 4.3 update user id to profile_receiver
@@ -203,12 +203,8 @@ const login = (req, res) => {
         return res.cc(process.env.INVALID_USERNAME_OR_PASSWORD)
     }
 
-    let sqlStr = 'select * from all_users where username=?'
-    db.query(sqlStr, userInfo.username, (err, results) => {
-        // error exist
-        if (err) {
-            return res.cc(err, 1)
-        }
+    let sqlStr = `select * from all_users where username = "${userInfo.username}"`
+    db.query(sqlStr).then(results => {
         if (results.length !== 1) {
             return res.cc(process.env.INCORRECT_USERNAME, 1)
         }
@@ -230,6 +226,8 @@ const login = (req, res) => {
             userId: results[0].user_id
         })
     })
+
+
 }
 
 const getUserInfo = async (req, res) => {
@@ -237,6 +235,7 @@ const getUserInfo = async (req, res) => {
 
     let isIssuer = await checkIsIssuer(userInfo.username)
 
+    console.log(isIssuer)
     if (isIssuer) { // cert issuer
         getCertificateIssuerInfo(userInfo.username, req, res)
     } else { // cert receiver
@@ -258,13 +257,10 @@ const checkIsIssuer = async (username) => {
 }
 
 const getCertificateIssuerInfo = (username, req, res) => {
-    let sqlStr = 'select * from all_users a, profile_issuer p, company c where a.username = ? and p.company_id = c.company_id'
+    let sqlStr = `select * from all_users a, profile_issuer p, company c where a.username = "${username}" and p.company_id = c.company_id and a.user_id = p.user_id`
 
-    db.query(sqlStr, username, (err, results) => {
-        // error exist
-        if (err) {
-            return res.cc(err, 1)
-        }
+    db.query(sqlStr).then(results => {
+
         if (results.length !== 1) {
             return res.cc(process.env.CANNOT_RETRIEVE_USER_INFO, 1)
         }
