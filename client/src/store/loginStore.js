@@ -20,7 +20,7 @@ class LoginStore {
             })
 
             const data = res.data
-            console.log(data)
+            
             // 1 means error, 0 means ok
             if (data.status === false) {
                 return data

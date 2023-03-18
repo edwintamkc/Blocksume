@@ -14,8 +14,8 @@ class UserStore {
             storage: window.localStorage
         })
     }
-    
-    registerIssuer = async ({username, password, email, position}) => {
+
+    registerIssuer = async ({ username, password, email, position }) => {
         const res = await http.post('/api/register/issuer', {
             username,
             password,
@@ -26,7 +26,7 @@ class UserStore {
         return res.data
     }
 
-    registerReceiver = async ({username, password, email, fullName, accessCode}) => {
+    registerReceiver = async ({ username, password, email, fullName, accessCode }) => {
         const res = await http.post('/api/register/receiver', {
             username,
             password,
@@ -38,7 +38,7 @@ class UserStore {
         return res.data
     }
 
-    checkVerificationAccessCode = async ({verificationAccessCode, certId}) => {
+    checkVerificationAccessCode = async ({ verificationAccessCode, certId }) => {
         const res = await http.post('/api/checkVerificationAccessCode', {
             verificationAccessCode,
             certId
@@ -71,6 +71,14 @@ class UserStore {
         }).catch((e) => {
             console.log(e)
         })
+    }
+
+    verifyAccount = async (verificationCode) => {
+        const res = await http.post('/api/user/verify', {
+            verificationCode
+        })
+
+        return res.data
     }
 }
 

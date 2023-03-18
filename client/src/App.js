@@ -10,6 +10,7 @@ import ManageCert from '@/pages/cert/manageCert'
 import UserInfo from '@/pages/user/userInfo'
 import SystemSelect from '@/pages/register/systemSelect'
 import VerifyCert from '@/pages/cert/verifyCert'
+import Verification from '@/pages/verification/verification'
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
             <Route path='/register/receiver' element={<Register />}></Route> 
             <Route path='/register/system-select' element={<SystemSelect />}></Route>
             <Route path='/cert/verify/:certId' element={<VerifyCert />}></Route>
+            <Route path='/account/activate/:verificationCode' element={<Verification />}></Route>
           </Routes>
         </div>
     </BrowserRouter>
