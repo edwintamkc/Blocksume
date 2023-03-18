@@ -83,7 +83,7 @@ const registerAsIssuer = (req, res) => {
                         const verificationLink = 'http://localhost:3000/account/activate/' + verificationCode
                         await sendVerificationEmail(userInfo.email, verificationLink)
 
-                        return res.cc(process.env.SUCCESS, 0)
+                        return res.cc(process.env.REGISTRATION_SUCCESS, 0)
 
                     }).catch(async error => {
 
@@ -173,7 +173,7 @@ const registerAsReceiver = (req, res) => {
                         const verificationLink = 'http://localhost:3000/account/activate/' + verificationCode
                         await sendVerificationEmail(userInfo.email, verificationLink)
 
-                        return res.cc(process.env.SUCCESS, 0)
+                        return res.cc(process.env.REGISTRATION_SUCCESS, 0)
 
                     }).catch(async error => {
 
@@ -203,10 +203,15 @@ const login = (req, res) => {
         return res.cc(process.env.INVALID_USERNAME_OR_PASSWORD)
     }
 
-    let sqlStr = `select * from all_users where username = "${userInfo.username}"`
+    let sqlStr = `select * from all_users a, account_verification v where a.username = "${userInfo.username}" and a.user_id = v.user_id`
     db.query(sqlStr).then(results => {
         if (results.length !== 1) {
             return res.cc(process.env.INCORRECT_USERNAME, 1)
+        }
+
+        // did not verify account
+        if (results[0].is_verified === 'false') {
+            return res.cc(process.env.PLEASE_VERIFY_YOUR_ACCOUNT, 1)
         }
 
         // compare encrypted password
@@ -235,7 +240,6 @@ const getUserInfo = async (req, res) => {
 
     let isIssuer = await checkIsIssuer(userInfo.username)
 
-    console.log(isIssuer)
     if (isIssuer) { // cert issuer
         getCertificateIssuerInfo(userInfo.username, req, res)
     } else { // cert receiver
@@ -261,6 +265,7 @@ const getCertificateIssuerInfo = (username, req, res) => {
 
     db.query(sqlStr).then(results => {
 
+        // no result
         if (results.length !== 1) {
             return res.cc(process.env.CANNOT_RETRIEVE_USER_INFO, 1)
         }
@@ -285,13 +290,11 @@ const getCertificateIssuerInfo = (username, req, res) => {
 }
 
 const getCertificateReceiverInfo = (username, req, res) => {
-    let sqlStr = 'select * from all_users a, profile_receiver p where a.username = ? and a.user_id = p.user_id'
+    let sqlStr = `select * from all_users a, profile_receiver p where a.username = "${username}" and a.user_id = p.user_id`
 
-    db.query(sqlStr, username, (err, results) => {
-        // error exist
-        if (err) {
-            return res.cc(err, 1)
-        }
+    db.query(sqlStr).then(results => {
+
+        // no result
         if (results.length !== 1) {
             return res.cc(process.env.CANNOT_RETRIEVE_USER_INFO, 1)
         }
@@ -331,4 +334,24 @@ const checkVerificationAccessCode = async (req, res) => {
 
 }
 
-export default { registerAsIssuer, registerAsReceiver, login, getUserInfo, checkVerificationAccessCode }
+const verifyUser = async (req, res) => {
+    const verificationCode = req.body.verificationCode
+    const currentTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
+    
+    let sqlStr = `select verification_id, is_verified from account_verification where verification_code = "${verificationCode}"`
+    db.query(sqlStr).then( async results => {
+        if(results.length === 0){
+            return res.cc(process.env.INVALID_VERIFICATION_CODE, 1)
+        }
+        if(results[0].is_verified === 'true'){
+            return res.cc(process.env.ACCOUNT_HAS_ALREADY_BEEN_VERIFIED, 1)
+        }
+
+        sqlStr = `update account_verification set is_verified = "true", last_modify_date = "${currentTime}" where verification_id = ${results[0].verification_id}`
+        await db.query(sqlStr)
+        return res.cc(process.env.ACCOUNT_HAS_BEEN_VERIFIED, 0)
+
+    })
+}
+
+export default { registerAsIssuer, registerAsReceiver, login, getUserInfo, checkVerificationAccessCode, verifyUser }
