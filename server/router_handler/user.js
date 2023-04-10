@@ -39,7 +39,7 @@ const registerAsIssuer = (req, res) => {
 
         // 1.3 check if the email domain exists
         const emailDomain = userInfo.email.slice(userInfo.email.indexOf('@') + 1)
-        sqlStr = `select 1 from company where company_email_domain = "${emailDomain}"`
+        sqlStr = `select company_id from company where company_email_domain = "${emailDomain}"`
         const matchedCompanies = await db.query(sqlStr)
 
         if (matchedCompanies.length === 0) {
